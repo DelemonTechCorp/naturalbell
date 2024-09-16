@@ -1,0 +1,765 @@
+
+<html lang="en">
+{% extends "components/header.html" %}
+{% load static %}
+{% block content %}
+<head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+
+        #calendar {
+            background-color: white;
+        }
+        .table-container {
+            width: 100%;
+            overflow: auto;
+            margin-left:28px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        thead th {
+            background-color: #033613; opacity: 95%;
+            color: #fff;
+            padding: 10px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            vertical-align: top;
+        }
+        thead th:first-child, tbody td:first-child {
+            width: 100px; /* Fixed width for the "Time" column */
+        }
+
+
+      tbody td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+            height: 30px;
+        }
+        h6{
+            text-align:center;
+            margin-bottom:20px;
+         }
+        h5{
+            text-align:center;
+        }
+
+        .scheduled {
+            color: black;
+        }
+        .button button {
+            background: none;
+            border: hidden;
+        }
+
+        .button {
+            background-color:#011106; opacity: 85%;;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-left:28px; /* Adjust spacing between buttons */
+
+        }
+        .btn-2 .button {
+            background-color:#033613;
+             opacity: 85%;;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-left:28px; /* Adjust spacing between buttons */
+            color: rgb(255, 255, 255);
+            width:100px;
+            padding:0 5px;
+            height:50px;
+            text-align:center;
+        }
+
+    .filter-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-select {
+        margin-bottom: 10px;
+    }
+
+    .custom-date-wrapper {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .custom-date-wrapper label {
+        margin-right: 10px;
+    }
+
+    .custom-date-wrapper input {
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+    .navigation-buttons {
+        display: flex;
+        margin-bottom: 20px;
+        margin-left:0;
+    }
+    .navigation-buttons button {
+        background: none;
+        border: none;
+        font-size: 24px; /* Adjust the size of the arrows */
+        cursor: pointer;
+
+
+
+    }
+    .navigation-buttons button:disabled {
+        color: #ccc; /* Style for disabled state */
+        cursor: not-allowed;
+    }
+
+    .navigation-buttons button{
+
+        background-color: rgb(5, 5, 51);
+        color:white;
+        margin:0;
+        width:50px;
+        padding:5px;
+        cursor: pointer;
+        font-size: 24px;
+        border: none;
+        margin-right:5px;
+    }
+    .nav-sec{
+        display:flex;
+    }
+    .navigation-buttons button:hover{
+        background-color: rgb(37, 37, 85);
+    }
+    .navigation-buttons #prevDay{
+        border-radius:5px 0 0 5px;
+    }
+    .navigation-buttons #nextDay{
+        border-radius: 0 5px 5px 0;
+    }
+    .navigation-buttons #calendar{
+        border-radius: 0 5px 5px 0;
+        background-color: rgb(5, 5, 51);
+        color:white;
+        margin:0;
+        width:50px;
+        padding:5px;
+        cursor: pointer;
+        font-size: 24px;
+        border: none;
+        margin-right:5px;
+    }
+
+    .nav-sec{
+        display:flex;
+
+    }
+    .button-container{
+        display: flex;
+        justify-content: space-between;
+        margin-left: 28px;
+      }
+      .button-container .btn-2{
+
+        display:flex;
+
+      }
+
+    .nav-sec #today{
+        padding:12px 25px;
+        background-color: grey;
+        border-radius:5px;
+        border:none;margin-left:10px;
+    }
+    .nav-sec #today:hover{
+        background-color: rgb(86, 86, 86);
+    }
+
+  @media (max-width: 992px) {
+    .nav-sec {
+        flex-direction: column;
+        align-items: center;
+    }
+    .nav-sec h5 {
+        margin: 10px 0;
+    }
+    #content {
+        width: 100%;
+        left: 0;
+        padding: 180px 0;
+    }
+    .btn-2 {
+        display: flex;
+        flex-direction: column;
+  }
+ }
+ @media (max-width: 768px) {
+             .table-container {
+                 margin-left: 0;
+             }
+             .button {
+                 margin-left: 0;
+             }
+
+       }
+       .btn-sec button{
+        background-color:#d6d5d5;
+        border: 2px solid #ccc;
+        margin-top: 20px;
+      }
+
+.status-container {
+    width: 200px;
+   margin-top: 70px;
+    align-self: flex-start;
+}
+.status {
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
+.popup {
+        display: none;
+        position: fixed;
+        z-index: 2000; /* Higher than the navbar, sidebar, or other content */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4); /* Transparent black overlay */
+        justify-content: center;
+        align-items: center;
+    }
+/* Popup content */
+.popup-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 400px;
+        border-radius: 10px;
+        z-index: 1001; /* Slightly higher to be on top of the overlay */
+    }
+.popup-content button{
+    margin-top: 20px;
+    padding:5px 10px;
+     margin-left: 40%;
+     border: none;
+     border-radius: 5px;
+     background-color: #ff6f61;
+     color: #fff;
+ }
+
+/* Close button */
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<div class="button-container">
+    <div class="nav-sec">
+        <div class="navigation-buttons">
+            <button id="prevDay" title="Previous day">&lt;</button>
+            <button id="nextDay" title="Next day">&gt;</button>
+            <button id="calendarButton" title="Select Date"><i class="fa-solid fa-calendar"></i></button>
+            <input type="date" id="datePicker" style="display:none;">
+        </div>
+        <div>
+            <button id="today">Today</button>
+        </div>
+    </div>
+    <div class="btn-2">
+
+        <button  class="button" type="button"  data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Filter</button>
+
+    <div>
+        <button class="button" type="button" ><a style="color:white;text-decoration: none;" href="{% url 'book' %}" >View All</a></button>
+    </div>
+    <div class="" id="downloadButton">
+        <button class="button" type="button" >Download</button>
+    </div>
+
+
+    <button class="button"   type="button" onclick="window.location.href='/schedules';">Assign to Therapist</button>
+
+
+    <button class="button"  type="button" onclick="window.location.href='/listschedules';">View in Table format </button>
+
+    </div>
+</div>
+<div>
+    <form method="GET" action="{% url 'book' %}">
+        {% csrf_token %}
+        <div class="collapse mt-3" id="collapseExample">
+            <div class="row mb-3">
+                <div class="col-md-3 mt-3"  style="margin-left:600px;display: flex;">
+                    <select class="form-select" name="therapist" style="width:700px;padding:10px;">
+                        <option value="" {% if not request.GET.therapist %}selected{% endif %} disabled hidden>Select Therapist</option>
+                        {% for t in therapist %}
+                            <option value="{{ t.id }}" {% if request.GET.therapist == t.id|stringformat:"s" %}selected{% endif %}>{{ t.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <div>
+                        <button class="button " type="submit" style="text-decoration: none; color: white;background-color:#033613; width:100px;
+               padding:8px 5px; opacity: 85%; border-radius: 4px;">Filter</button>
+                    </div>
+
+                </div>
+
+
+
+        </div>
+    </form>
+    </div>
+<div class="main-panel" >
+    <div class="content-wrapper" style="display:flex;flex-direction:row;overflow-x: auto;">
+        <div class="status-container">
+            {% for i in status %}
+            <div class="status registered"
+                 style="background-color: {{ i.color }};"
+                 onclick="deleteStatus({{ i.id }})">
+                {{ i.Status }}
+            </div>
+        {% endfor %}
+
+        <!--<script>-->
+        <!--    function deleteStatus(id) {-->
+        <!--        if (confirm('Are you sure you want to delete this status?')) {-->
+                    <!--// Create a form element to send a POST request-->
+        <!--            var form = document.createElement('form');-->
+        <!--            form.method = 'POST';-->
+        <!--            form.action = '{% url "deletestatuss" id=0 %}'.replace('0', id);-->
+
+                    <!--// Add CSRF token-->
+        <!--            var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;-->
+        <!--            var csrfInput = document.createElement('input');-->
+        <!--            csrfInput.type = 'hidden';-->
+        <!--            csrfInput.name = 'csrfmiddlewaretoken';-->
+        <!--            csrfInput.value = csrfToken;-->
+        <!--            form.appendChild(csrfInput);-->
+
+                    <!--// Submit the form-->
+        <!--            document.body.appendChild(form);-->
+        <!--            form.submit();-->
+        <!--        }-->
+        <!--    }-->
+        <!--</script>-->
+            {% comment %} <div class="status registered" style="background-color: #008000;">Registered</div>
+            <div class="status not-confirmed" style="background-color: #ff6f61;">Not Confirmed</div>
+            <div class="status confirmed" style="background-color: #8a2be2;">Confirmed</div>
+            <div class="status waiting" style="background-color: #7fff00;">Waiting</div>
+            <div class="status being-seen" style="background-color: #adff2f;">Being seen</div>
+            <div class="status no-show" style="background-color: #ffd700;">No show</div>
+            <div class="status no-answer" style="background-color:#20b2aa;">No answer</div>
+            <div class="status attended" style="background-color:#ff69b4;">Attended</div>
+            <div class="status switch-off" style="background-color: #dda0dd;">Switch off</div> {% endcomment %}
+            <div class="btn-sec"><button id="changeColorBtn">Change color</button></div>
+        </div>
+
+        <div id="colorPopup" class="popup">
+            <div class="popup-content">
+                <span class="close-btn">&times;</span>
+                <h2 style="margin-bottom: 20px;">Change Status Color</h2>
+                <form id="colorForm" method='post' action='{% url "statuss" %}'>
+                    {% csrf_token %}
+                    <div>
+                        <label for="statusInput">Status:</label>
+                        <select id="statusInput" name="status_id" style="border-radius:5px;width:100%;" >
+                            <option value="">Select Status</option>
+                            {% for i in status %}
+                                <option value="{{ i.id }}">{{ i.Status }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="checkbox" id="newStatusCheckbox" onclick="toggleNewStatusFields()"> Add New Status
+                    </div>
+                    <div id="newStatusFields" style="display:none;">
+                        <label for="newStatusInput" style="margin-top: 10px;">New Status:</label>
+                        <input type="text" id="newStatusInput" name="new_status" style="border-radius:5px;width:100%;">
+                    </div>
+                    <div>
+                        <label for="colorPicker" style="margin-top: 10px;">Choose Color:</label>
+                        <input type="color" id="colorPicker" name="color"  style="border-radius:5px;width:100%;">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+                  <script>
+                    function toggleNewStatusFields() {
+                        var newStatusFields = document.getElementById('newStatusFields');
+                        var statusSelect = document.getElementById('statusInput');
+                        var checkbox = document.getElementById('newStatusCheckbox');
+
+                        if (checkbox.checked) {
+                            statusSelect.value = ""; // Deselect the existing status
+                            newStatusFields.style.display = 'block';
+                            statusSelect.setAttribute( false); // Make existing status not required
+                        } else {
+                            newStatusFields.style.display = 'none';
+                            statusSelect.setAttribute( true); // Make existing status required again
+                        }
+                    }
+                </script>
+            </div>
+        </div>
+        <script>
+            // Open the popup
+            document.getElementById('changeColorBtn').addEventListener('click', function() {
+                document.getElementById('colorPopup').style.display = 'flex';
+            });
+
+            // Close the popup
+            document.querySelector('.close-btn').addEventListener('click', function() {
+                document.getElementById('colorPopup').style.display = 'none';
+            });
+        </script>
+
+        <div class="main" style="margin:0;">
+
+            <div id="downloadable-content">
+            <h5><b> Therapist Appointment Scheduler</b></h5>
+            <div class="download">
+
+            <h6 id="date-heading">{{ current_date }} ({{ current_weekday }})</h6>
+            <div class="schedule" id="schedule">
+                <!-- Placeholder for the schedule grid -->
+            </div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        {% for t in therapist %}
+                            <th>{{ t.name }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody id="schedule-body">
+                    <!-- Rows will be generated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        <div id='calendar'></div>
+    </div>
+</div>
+</div>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    const prevDayButton = document.getElementById('prevDay');
+    const nextDayButton = document.getElementById('nextDay');
+    const calendarButton = document.getElementById('calendarButton');
+    const datePicker = document.getElementById('datePicker');
+    const dateHeading = document.getElementById('date-heading');
+    const scheduleBody = document.getElementById('schedule-body');
+    const todayButton = document.getElementById('today');
+
+    let currentDate = new Date(); // Initialize with the current date
+    updateDateHeading();
+
+    function updateDateHeading() {
+        const formattedDate = currentDate.toLocaleDateString();
+        const weekday = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+        dateHeading.textContent = `${formattedDate} (${weekday})`;
+    }
+
+
+    function changeDate(offset) {
+        currentDate.setDate(currentDate.getDate() + offset);
+        updateDateHeading();
+        updateSchedule();
+    }
+
+    function updateSchedule() {
+        const formattedDate = currentDate.toISOString().split('T')[0];
+        const selectedTherapist = document.querySelector('select[name="therapist"]').value;
+
+        fetch(`/update_schedule/?date=${formattedDate}&therapist=${selectedTherapist}`)
+
+            .then(response => response.json())
+            .then(data => {
+                populateSchedule(data.events);
+            });
+    }
+
+    prevDayButton.addEventListener('click', function() {
+        changeDate(-1);
+    });
+
+    nextDayButton.addEventListener('click', function() {
+        changeDate(1);
+    });
+    todayButton.addEventListener('click', function() {
+        location.reload(); // Refresh the page
+    });
+    calendarButton.addEventListener('click', function() {
+        datePicker.click(); // Trigger the date picker
+    });
+
+    datePicker.addEventListener('change', function() {
+        currentDate = new Date(this.value);
+        updateDateHeading();
+        updateSchedule();
+    });
+
+    function populateSchedule(events) {
+        console.log(events);
+        const scheduleBody = document.getElementById('schedule-body');
+
+
+        scheduleBody.innerHTML = '';
+
+
+        generateTimeSlots();
+
+        events.forEach(event => {
+            const startTime = new Date(event.start);
+            const endTime = new Date(event.end);
+            const column = event.column;
+
+            let current = new Date(startTime);
+            current.setMinutes(Math.floor(current.getMinutes() / 30) * 30);
+
+
+            let firstCell = true;
+
+            while (current < endTime) {
+                const timeSlot = formatTime(current);
+                const cell = document.querySelector(`[data-time="${timeSlot}"][data-column="${column}"]`);
+
+                if (cell) {
+                    if (firstCell) {
+                        cell.classList.add('scheduled');
+                        cell.style.backgroundColor = event.color;
+
+                        // Create slot content with actual start and end times
+                        const slotContent = document.createElement('div');
+                        slotContent.style.cursor = 'pointer';
+                        slotContent.onclick = function() {
+                            redirectToPatientProfile(event.patientId);
+                        };
+                        slotContent.innerHTML  = `${formatTime(startTime)} - ${formatTime(endTime)}<br> EMR No:${event.id}  <br> Patient: ${event.patient} <br> Therapy: ${event.therapy}  <br> Note: ${event.note}`;
+                        cell.innerHTML = '';
+                        cell.appendChild(slotContent);
+                        firstCell = false;
+                    } else {
+                        cell.classList.add('scheduled');
+                        cell.style.backgroundColor = event.color;
+                        cell.innerHTML = '';
+                    }
+
+                    // Calculate and set rowspan for the first cell
+                    const durationMinutes = (endTime - startTime) / (1000 * 60);
+                    const spanCount = Math.ceil(durationMinutes / 30);
+                    if (firstCell && spanCount > 1) {
+                        cell.rowSpan = spanCount;
+                    }
+
+                    // Move to the next time slot
+                    current.setMinutes(current.getMinutes() + 30);
+                } else {
+                    // If the cell does not exist, move to the next slot
+                    current.setMinutes(current.getMinutes() + 30);
+                }
+            }
+        });
+    }
+
+    // function generateTimeSlots() {
+    //     const tbody = document.getElementById('schedule-body');
+    //     const numberOfColumns = document.querySelectorAll('thead th').length;
+
+    //     let currentTime = new Date();
+    //     currentTime.setHours(0, 0, 0, 0);
+
+    //     for (let i = 0; i < 48; i++) {
+    //         const timeSlot = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    //         const row = document.createElement('tr');
+
+    //         const timeCell = document.createElement('td');
+    //         timeCell.textContent = timeSlot;
+    //         row.appendChild(timeCell);
+
+    //         for (let j = 1; j < numberOfColumns; j++) {
+    //             const cell = document.createElement('td');
+    //             cell.dataset.time = timeSlot;
+    //             cell.dataset.column = j;
+    //             row.appendChild(cell);
+    //         }
+
+    //         tbody.appendChild(row);
+    //         currentTime.setMinutes(currentTime.getMinutes() + 30);
+    //     }
+    // }
+    function generateTimeSlots() {
+    const tbody = document.getElementById('schedule-body');
+    const numberOfColumns = document.querySelectorAll('thead th').length;
+
+    let currentTime = new Date();
+    currentTime.setHours(8, 0, 0, 0); // Start at 10:00 AM
+
+    const totalSlots = 29; // 12 hours * 2 slots per hour = 24 slots
+
+    for (let i = 0; i < totalSlots; i++) {
+        const timeSlot = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const row = document.createElement('tr');
+
+        const timeCell = document.createElement('td');
+        timeCell.textContent = timeSlot;
+        row.appendChild(timeCell);
+
+        for (let j = 1; j < numberOfColumns; j++) {
+            const cell = document.createElement('td');
+            cell.dataset.time = timeSlot;
+            cell.dataset.column = j;
+            row.appendChild(cell);
+        }
+
+        tbody.appendChild(row);
+        currentTime.setMinutes(currentTime.getMinutes() + 30); // Move to the next half-hour
+    }
+}
+    function formatTime(time) {
+        return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    generateTimeSlots();
+    updateSchedule(); // Initial call to populate the schedule for the current date
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add the download functionality
+        const downloadButton = document.getElementById('downloadButton');
+        downloadButton.addEventListener('click', function() {
+            const element = document.getElementById('downloadable-content'); // Select the specific section
+            html2pdf()
+                .from(element)
+                .set({
+                    margin: [0, 0, 0, 0],
+                    filename: 'schedule.pdf',
+                    html2canvas: { scale: 2, useCORS: true },
+                    jsPDF: { orientation: 'landscape', unit: 'in', format: [element.scrollWidth / 96, element.scrollHeight / 96] } // Custom size based on content dimensions
+                })
+                .save();
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize flatpickr on the input field
+        const datePicker = flatpickr("#datePicker", {
+            onChange: function(selectedDates, dateStr, instance) {
+                console.log("Selected date: ", dateStr); // Handle the selected date
+            }
+        });
+
+        // Show the date picker when the button is clicked
+        document.getElementById("calendarButton").addEventListener("click", function() {
+            datePicker.open();
+        });
+    });
+    </script>
+    <script>
+        document.getElementById('changeColorBtn').addEventListener('click', function() {
+    document.getElementById('colorPopup').style.display = 'flex';
+});
+
+document.querySelector('.close-btn').addEventListener('click', function() {
+    document.getElementById('colorPopup').style.display = 'none';
+});
+
+window.addEventListener('click', function(event) {
+    if (event.target == document.getElementById('colorPopup')) {
+        document.getElementById('colorPopup').style.display = 'none';
+    }
+});
+
+{% comment %} document.getElementById('colorForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const status = document.getElementById('statusInput').value;
+    const color = document.getElementById('colorPicker').value;
+    const statusElement = document.querySelector(`.status.${status.toLowerCase().replace(/\s+/g, '-')}`);
+
+    if (statusElement) {
+        statusElement.style.backgroundColor = color;
+        document.getElementById('colorPopup').style.display = 'none';
+    } else {
+        alert('Status not found');
+    }
+}); {% endcomment %}
+
+    </script>
+    <script>
+        function redirectToPatientProfile(patientId) {
+            const url = new URL(window.location.origin + "/listschedules"); // Adjust the URL if necessary
+            url.searchParams.append('patient_id', patientId);
+            window.location.href = url.toString();
+
+        }
+
+        // Other JavaScript functions or code
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+    const table = document.querySelector('table');
+    const numberOfColumns = document.querySelectorAll('thead th').length - 1; // Subtract 1 for the "Time" column
+
+    let columnWidth;
+
+    if (numberOfColumns === 2) {
+        columnWidth = '50%';
+    } else if (numberOfColumns === 3) {
+        columnWidth = '33.33%';
+    } else if (numberOfColumns === 4) {
+        columnWidth = '25%';
+    } else if (numberOfColumns >= 5) {
+        columnWidth = '150px'; // Fixed width for 5 or more columns
+    }
+
+    // Apply the calculated width to all doctor columns, except the "Time" column
+    const doctorColumns = table.querySelectorAll('thead th:not(:first-child), tbody td:not(:first-child)');
+    doctorColumns.forEach(column => {
+        column.style.width = columnWidth;
+    });
+});
+        </script>
+{% endblock %}
+</html>

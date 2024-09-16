@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "components/header.html" %}
+{% load static %}
+{% block content %}
+  <head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+ </head>
+
+<style>
+    body{
+    background-color: #f2f2f2;
+}
+.breadcrumb-sec{
+   margin:40px;
+
+}
+#form-sec .col-sec{
+    display:flex;
+}
+#form-sec label{
+    font-weight:500;
+     color: #495057;
+    width:100px;
+    margin-right:10px;
+
+}
+#form-sec{
+    background-color: white;
+    margin:40px 50px;
+    padding:30px;
+    border:1px solid #eee;
+    border-radius: 5px;
+}
+#form-sec input{
+    display: block;
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+}
+#form-sec select{
+    width:100%;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+}
+#form-sec .sec-1{
+    display: flex;
+    margin-bottom:30px;
+}
+
+
+#form-sec .sec-2{
+    margin-bottom:30px;
+}
+
+#form-sec .sec-3{
+    margin-bottom:30px;
+}
+#form-sec .sec-4{
+    margin-bottom:30px;
+}
+.sec-2 .col-sec #dob{
+    height:40px;
+}
+@media screen and (max-width: 480px) {
+ #form-sec .col-sec{
+    margin-bottom:20px;
+  }
+  #form-sec  #abc  {
+   margin-top:-20px;
+}
+}
+#form-sec .btn-sec{
+    justify-content: center;
+   align-items: center;
+   display: flex;
+
+}
+
+</style>
+
+    <div class="breadcrumb-sec">
+    <h1>Book appointment</h1>
+    <ul class="breadcrumb">
+    <li class="breadcrumb-item">
+    <a href="#"><i class='bx bxs-dashboard'></i></a>
+    </li>
+    <li class="breadcrumb-item active">
+        Appointment
+    </li>
+   </ul>
+   </div>
+
+    <form id="form-sec" method="post" action="/editbooking">
+         {% csrf_token %}
+        <h5 style="margin-bottom: 30px;">Edit Patient</h5>
+        <div class="row sec-1">
+            <div class="col-lg-6 col-sec">
+                <label for="doctor">Doctor:</label>
+                <select id="doctor" name="doctor">
+                    <option value="{{Booking.Doctor.id}}">{{Booking.Doctor}}</option>
+                    {% for i in doctors %}
+                        <option value="{{ i.id }}">{{ i.name }}</option>
+                    {% endfor %}
+                </select>
+           </div>
+
+            <div class="col-lg-6 col-sec">
+                <label for="doctor">Patient:</label>
+                <select id="doctor" name="patient">
+                    <option value="{{Booking.patientid.id}}">{{Booking.patientid}}</option>
+                    {% for i in patient %}
+                        <option value="{{ i.id }}">{{ i.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+
+    <div class="row sec-2">
+        <div class="col head-col">
+            <div class="col col-sec"  id="abc" style="margin-bottom:20px">
+                <label for="dob">Appointment Date:</label>
+                 <input type="date" id="dob" value="{{date }}" name="regdate" name="birthday">
+            </div>
+
+        </div>
+
+        <div class="col head-col2">
+            <div class="col col-sec" style="margin-bottom:30px">
+                <label for="dob">Appointment Time:</label>
+                 <input type="time" id="dob" value="{{time }}" name="regtime" name="birthday">
+            </div>
+
+        </div>
+         <div class="row sec-3">
+            <div class="col col-sec" id="abc" >
+                <label for="email">Treatment</label>
+                <select id="treatment" name="treatment">
+                    <option value="{{Booking.treatment.id}}">{{ Booking.treatment.Treatment }}</option>
+                    {% comment %} <option value="{{Booking.treatment.Treatment.id}}">{{ Booking.treatment.Treatment }}</option> {% endcomment %}
+                    {% for i in treatment %}
+                        <option value="{{ i.id }}">{{ i.Treatment }}</option>
+                    {% endfor %}
+                </select>
+          </div>
+    </div>
+
+<div class="row sec-3">
+    <div class="col col-sec" id="abc" >
+        <label for="doctor">Notes:</label>
+        <textarea rows="6"name="about" class="form-control no-resize" placeholder="Please type what you want...">{{Booking.about}}</textarea>
+  </div>
+</div>
+  <div class="btn-sec">
+    <button type="submit" style="background-color:#033613;opacity: 95%;border:none" class="btn btn-primary">update</button>
+
+</div>
+
+  </div>
+
+
+   </div>
+
+
+    </form>
+
+{% endblock %}

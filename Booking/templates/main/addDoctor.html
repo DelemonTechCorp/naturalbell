@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "components/header.html" %}
+{% load static %}
+{% block content %}
+  <head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+ </head>
+
+        <style>
+            .sec-5{
+                margin-bottom:30px;
+            }
+            body{
+    background-color: #f2f2f2;
+}
+
+
+
+#form-sec{
+    background-color: white;
+    margin: 40px;
+    padding:30px;
+    border:1px solid #eee;
+    border-radius: 5px;
+}
+#form-sec input{
+    display: block;
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+}
+#form-sec select{
+    width:100%;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+}
+#form-sec .sec-1{
+    display: flex;
+    margin-bottom:30px;
+}
+
+
+#form-sec .sec-2{
+    margin-bottom:30px;
+}
+#form-sec .sec-2 .head-col{
+    display:flex;
+}
+#form-sec .sec-2 .head-col2{
+    display:flex;
+}
+#form-sec .sec-3{
+    margin-bottom:30px;
+}
+#form-sec .sec-4{
+    margin-bottom:30px;
+}
+.breadcrumb-sec{
+    margin-left:40px;
+}
+#form-sec .btn-sec {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-top: 20px;
+    gap: 10px;
+}
+@media (max-width: 992px) {
+
+    #content {
+      width: 100%;
+      left: 0;
+      padding:180px 0;
+    }
+
+
+  }
+
+        </style>
+
+    <div class="breadcrumb-sec">
+    <h1>Add Doctor</h1>
+    <ul class="breadcrumb">
+    <li class="breadcrumb-item">
+    <a href="#"><i class='bx bxs-dashboard'></i></a>
+    </li>
+    <li class="breadcrumb-item active">
+        Doctor
+    </li>
+    <li class="breadcrumb-item active">
+        Add doctor
+    </li>
+   </ul>
+   </div>
+   <form id="form-sec" method="post" action="/addDoctor" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h5 style="margin-bottom: 30px;">Add Doctor</h5>
+    <div class="row sec-1">
+        <div class="col-lg-6" >
+        <input type="text" placeholder="First name"  name="firstname" required>
+        </div>
+        <div class="col-lg-6">
+        <input type="text" placeholder="Last name" name="lastname">
+        </div>
+    </div>
+
+
+<div class="row sec-2">
+    <div class="col head-col">
+        <div class="col">
+                <select name="department" required>
+                    <option value="">Department</option>
+                    {% for i in department %}
+                        <option value="{{ i.id }}">{{ i.Department }}</option>
+                    {% endfor %}
+                </select>
+               </div>
+        <div class="col">
+        <select name="gender">
+            <option value="">Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        </div>
+    </div>
+
+    <div class="col head-col2">
+        <div class="col">
+            <input type="text" name="speciality" placeholder="Qualification">
+        </div>
+        <div class="col">
+            <input type="" placeholder="Phone" name="phno" required>
+        </div>
+    </div>
+</div>
+
+<div class="row sec-3">
+<div class="col">
+<input type="email" placeholder="Enter your Email" name="email" required>
+</div>
+
+
+
+<div class="col">
+    <input type="text" placeholder="Location" name="location">
+</div>
+</div>
+<div class="sec-5">
+    <input type="file" placeholder="Profile" name="image">
+</div>
+<div class="sec-4">
+    <textarea rows="6" class="form-control no-resize" placeholder="About you" name="about"></textarea>
+</div>
+<div class="btn-sec">
+    <button type="submit" style="background-color:#033613;opacity: 95%;border:none" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-outline-secondary">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

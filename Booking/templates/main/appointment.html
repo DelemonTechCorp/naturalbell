@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "components/header.html" %}
+{% load static %}
+{% block content %}
+  <head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    <!-- Include Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Include jQuery (necessary for Select2) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+ </head>
+
+<style>
+ body {
+    background-color: #f2f2f2;
+}
+
+.breadcrumb-sec {
+    margin: 40px;
+}
+
+#form-sec .col-sec {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+#form-sec label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 5px;
+}
+
+#form-sec {
+    background-color: white;
+    margin: 40px 50px;
+    padding: 30px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add box-shadow */
+    max-width: 100%;
+}
+
+#form-sec input,
+#form-sec select {
+    display: block;
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    max-width: 100%; /* Ensure max width */
+    box-sizing: border-box; /* Include padding in the width calculation */
+     height: 35px;
+}
+
+
+#form-sec .btn-sec {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-top: 20px;
+}
+#form-sec .select2-container .select2-selection--single {
+    height: 35px; /* Same height as input fields */
+    line-height:1.5; /* Align text vertically */
+    padding: 3px; /* Ensure consistent padding */
+    border: 1px solid #ced4da; /* Same border style */
+    border-radius: .25rem; /* Same border-radius */
+    font-size: 1rem;
+    color: #495057;
+    box-sizing: border-box; /* Include padding in the height calculation */
+    max-width: 100%;
+    width:100%;
+}
+
+@media screen and (max-width: 480px) {
+    #form-sec {
+        margin: 0;
+        padding: 20px;
+        width: 100%;
+
+    }
+    body{
+        padding:20px;
+    }
+
+    #form-sec .col-sec {
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    #form-sec label {
+        width: auto;
+    }
+
+    #form-sec input,
+    #form-sec select {
+        width: 100%;
+        margin-bottom: 15px; /* Add some space between fields */
+
+    }
+}
+
+@media (max-width: 992px) {
+    #content {
+        width: 100%;
+        padding: 180px 0;
+        left: 0;
+    }
+}
+.sec-1,.sec-2,.sec-3{
+    margin-bottom:10px;
+}
+
+.sec-5{
+    margin-bottom:20px;
+}
+@media screen and (max-width: 480px) {
+    .select2-container {
+        width: 100% !important; /* Ensure the Select2 container is 100% width */
+    }
+
+    .select2-container .select2-selection--single {
+        width: 100% !important; /* Ensure the select box is 100% width */
+        white-space: nowrap; /* Prevent the text from wrapping */
+    }
+
+    #form-sec {
+        padding: 15px; /* Reduce padding to give more space */
+    }
+}
+
+</style>
+
+    <div class="breadcrumb-sec">
+    <h1>Book appointment</h1>
+    <ul class="breadcrumb">
+    <li class="breadcrumb-item">
+    <a href="#"><i class='bx bxs-dashboard'></i></a>
+    </li>
+    <li class="breadcrumb-item active">
+        Appointment
+    </li>
+   </ul>
+   </div>
+
+    <form id="form-sec" method="post" action="/addAppointment">
+         {% csrf_token %}
+        <h5 style="margin-bottom: 30px;">Book appointment</h5>
+        <div class="sec-5">
+            <label for="fname">EMR No:</label>
+            <select id="patient-select" name="pid" required>
+                <option value="new">New Patient</option>
+                <option value="">Select Patient ID</option>
+                {% for i in patient %}
+                    <option value="{{ i.id }}">{{ i.patient_id }} {{i.name}}</option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <script>
+            $(document).ready(function() {
+                // Initialize Select2 on the patient-select element
+                $('#patient-select').select2({
+                    placeholder: "Select Patient ID",
+                    allowClear: true
+                });
+            });
+        </script>
+
+        <div class="row sec-1">
+
+            <div class="col-lg-6 col-sec">
+            <label for="fname">First name:</label>
+            <input type="text" id="fname" name="fname" placeholder="enter your firstname" required>
+           </div>
+
+            <div class="col-lg-6 col-sec">
+            <label for="lname">Last name:</label>
+            <input type="text" id="lname" name="lname" placeholder="enter your lastname">
+
+            </div>
+        </div>
+
+
+    <div class="row sec-2">
+        <div class="col head-col">
+            <div class="col col-sec">
+                <label for="dob">Date of birth:</label>
+                 <input type="date" id="dob" name="dob" name="birthday">
+            </div>
+            <div class="col col-sec">
+                <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+                <option value="">Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+            </div>
+        </div>
+
+        <div class="col head-col2">
+            <div class="col col-sec" >
+                <label for="email">Nationality:</label>
+                <input type="text" id="email" name="email" placeholder="enter your Nationality" required>
+            </div>
+            <div class="col col-sec" >
+                <label for="number">Phone no:</label>
+                <input type="text" id="number" name="phno" placeholder="enter your phone number" required>
+            </div>
+        </div>
+    </div>
+
+<div class="row sec-3">
+    <div class="col col-sec">
+        <label for="date">Appointment date:</label>
+    <input type="date" id="date" name="apdate" required>
+  </div>
+
+  <div class="col col-sec">
+    <label for="time">Appointment time:</label>
+    <input type="time" id="time" name="aptime" required>
+
+  </div>
+
+
+</div>
+
+    <div class="row">
+        <div class="col col-sec" >
+            <label for="dob">Treatment:</label>
+            <select id="treatment" name="treatment" required>
+                <option value="">select treatment</option>
+                {% for i in treatment %}
+                    <option value="{{ i.id }}">{{ i.Treatment }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <script>
+            $(document).ready(function() {
+                // Initialize Select2 on the patient-select element
+                $('#treatment').select2({
+                    placeholder: "Select Treatment",
+                    allowClear: true
+                });
+            });
+        </script>
+        <div class="col col-sec">
+            <label for="gender">Doctor:</label>
+        <select id="gender" name="doctor">
+            <option value="">Select Doctor</option>
+                {% for i in doctor %}
+                    <option value="{{ i.id }}">{{ i.name }}</option>
+                {% endfor %}
+        </select>
+        </div>
+    </div>
+
+
+    <div class="sec-4">
+        <textarea rows="6" name="note" class="form-control no-resize" placeholder="Please type what you want..."></textarea>
+    </div>
+
+    <div class="btn-sec">
+    <button type="submit" style="background-color:#033613;opacity: 95%;border:none" class="btn btn-primary">Submit</button>
+    </div>
+    </form>
+    <script>
+        $(document).ready(function() {
+            // Initialize Select2 on the patient-select element
+            $('#patient-select').select2({
+                placeholder: "Select Patient ID",
+                allowClear: true
+            });
+
+            // Handle patient selection
+            $('#patient-select').on('change', function() {
+                var patientId = $(this).val();
+                if (patientId !== "new" && patientId) {
+                    // Make an AJAX call to fetch patient details
+                    $.ajax({
+                        url: '{% url "get_patient_details" %}',  // Replace with your URL
+                        data: {
+                            'patient_id': patientId
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                var patient = response.patient_data;
+                                $('#fname').val(patient.first_name);
+                                $('#lname').val(patient.last_name);
+                                $('#gender').val(patient.gender);
+                                $('#number').val(patient.phone);
+                                $('#email').val(patient.email);
+                                $('#dob').val(patient.dob);
+                            } else {
+                                alert(response.message);
+                            }
+                        }
+                    });
+                } else {
+                    // Clear the form fields if no patient is selected or "New Patient" is selected
+                    $('#fname').val('');
+                    $('#lname').val('');
+                    $('#gender').val('');
+                    $('#number').val('');
+                    $('#email').val('');
+                    $('#dob').val('');
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+     {% load static %}
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="{% static 'image/logo.png' %}" type="image/gif"/>
+<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+<title>NatureBells</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .sidebar {
+    position: fixed;
+    background-color: #f4f7f6;
+    left: 0;
+    width: 280px;
+    height: calc(100% - 87px);
+    margin-top:87px;
+    z-index: 2000;
+    font-family: var(--lato);
+    transition: .3s ease;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    border-right:1px solid #dfdfdf;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-left:8px solid #69b9ad;
+    overflow-y: auto;
+  }
+  #content {
+    position: relative;
+    width: calc(100% - 280px);
+    left: 280px;
+    transition: .3s ease;
+    background-color: #f4f7f6;
+    padding: 130px 30px;
+    border-radius: 10px 0 0 0;
+  }
+
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  .sidebar ul li {
+
+    cursor: pointer;
+    padding:5px;
+}
+  .sidebar ul a:hover {
+    background-color:#737c85;
+    color: #ffffff;
+  }
+  .sidebar ul a:hover{
+    i{
+        color:#69b9ad;
+    }
+  }
+
+  .sidebar ul a.active {
+    background-color:#f0f0f0; /* Keep the same background color when active */
+  }
+  .sidebar ul li a {
+    color:black;
+    text-decoration: none;
+    padding:15px;
+    display: block;
+
+  }
+  .sidebar ul li i{
+    color: #69b9ad;
+    margin-right: 20px;
+  }
+  .sidebar ul .submenu {
+    display: none;
+    transition: all 0.3s ease-out;
+    background-color: #f4f7f6; /* Same background color as sidebar */
+    margin-top:10px;
+    margin-left:20px;
+  }
+  .sidebar ul li.active .submenu {
+    display: block;
+  }
+  .sidebar ul li .arrow {
+    float: right;
+    transition: all 0.3s ease-out;
+  }
+  .sidebar ul li.active .arrow {
+    transform: rotate(90deg);
+
+  }
+  .sidebar .has-submenu .class-arrow{
+    color: #69b9ad;
+  }
+  .sidebar li .arrow {
+    color: #69b9ad;
+  }
+
+
+
+
+
+
+
+  .navbar{
+  display:flex;
+	background-color: #fff;
+	position: fixed;
+	z-index:99;
+	width: 100%;
+	left:0;
+	border-bottom:1px solid  #dad9d9;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	padding:0px;
+	border-left: 8px solid #69b9ad;
+
+}
+.navbar .nav-rights{
+
+	margin-right:40px;
+	display: flex;
+
+}
+.navbar .nav-rights a{
+	margin-right:40px;
+  color:black;
+  font-size: 16px;
+  font-weight: 500;
+
+}
+.navbar .nav-rights a:hover{
+    color:blue;
+    transition: .3s;
+    transform: scale(1.1);
+}
+.navbar .nav-rights img{
+	border-radius:50%;
+	height:50px;
+	margin-right:10px;
+}
+
+.navbar button{
+	display:none;
+}
+.navbar a{
+	text-decoration: none;
+}
+.navbar i{
+	color:black;
+}
+.navbar .navbar-brand{
+	display:flex;
+	margin-left:20px;
+}
+.navbar .navbar-brand img{
+	border:1px solid black;
+	height: auto;
+    max-width: 100%;
+    border: none;
+    border-radius: 0;
+	height:60px;
+	width: 200px;
+
+}
+.navbar .navbar-brand  a{
+	display: inline-block;
+}
+
+/* .navbar .form-sec{
+	margin-left:-50vw;
+	border:1px solid #a3a0a0;
+	border-radius:5px;
+	padding:10px;
+}
+.navbar .form-sec input{
+	border:red;
+	outline:none;
+}
+.navbar .form-sec input button{
+	border:none;
+} */
+.navbar .nav-right a{
+	margin:20px;
+}
+/* .navbar .nav-right .notification{
+	position:relative;
+}
+.nav-right .notification .num{
+	position: absolute;
+	top: -6px;
+	right: -6px;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 2px solid var(--light);
+	background: var(--red);
+	color: var(--light);
+	font-weight: 700;
+	font-size: 12px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+} */
+@media (max-width: 992px) {
+
+
+    .sidebar {
+      width: 280px;
+      left: -280px;
+    }
+
+    .sidebar.show {
+      left: 0;
+    }
+
+    .navbar button {
+      display: inline-block;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      margin-right: 20px;
+    }
+
+    .navbar .nav-rights {
+      margin-right: 0;
+      display: flex;
+      flex-direction:row;
+      justify-content: flex-end;
+      padding: 10px;
+      background-color: #fff;
+      position: absolute;
+      top: 86px; /* Adjust according to your navbar height */
+      left: 0;
+      width: 100%;
+    }
+    .nav-rights {
+        display: none;
+        }
+
+        .nav-rights.show {
+            display: flex;
+        }
+
+
+     }
+     #content  table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+
+
+  }
+  table th:first-child {
+    border-top-left-radius: 5px; /* Round the top left corner */
+}
+
+table th:last-child {
+    border-top-right-radius: 5px; /* Round the top right corner */
+}
+  .page-select select{
+        border-radius:3px;
+        padding:3px;
+        margin-top: 10px;
+    }
+    #form-sec{
+    background-color: white;
+    margin:40px 50px;
+    padding:30px;
+    border:1px solid #eee;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* #content{
+    position: relative;
+	width: calc(100% - 280px);
+	left: 280px;
+	transition: .3s ease;
+  padding: 130px 30px;
+	padding:100px 0;
+
+}
+#content  .breadcrumb a {
+    text-decoration: none;
+  }
+
+
+
+  #content  table {
+    width: 100%;
+  }
+
+  #content  .table-sec {
+    margin: 30px 10px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+  }
+
+  #content  .table-sec h3 {
+    margin: 10px 0 40px 0;
+  }
+
+  #content  .table-sec td {
+    padding: 1rem;
+	text-align: center;
+  }
+
+  #content  .table-sec th {
+    background-color: black;
+    color:white;
+    text-align: center;
+    padding: 1rem;
+
+  }
+
+  #content  .table-sec table tr {
+    border-top: 1px solid #dee2e6;
+  }
+
+  #content  table tr:hover {
+    background-color: #ececec;
+  }
+
+
+  #content .first-sec .col-sec {
+    margin: 10px;
+  }
+
+  #content  .row .card {
+    padding: 20px;
+    color: #5A5A5A;
+  }
+
+  #content  .row .card .text {
+    font-family: "Ubuntu", sans-serif;
+    font-size: 14px;
+    color: #5A5A5A;
+  }
+
+  #content  .row .card h5 {
+    margin-left: 40px;
+  }
+
+  #content  .row .card div {
+    padding: 10px;
+  }
+
+  #content  .row .card i {
+    margin-right: 15px;
+  }
+
+  #content  .row .card div:first-child {
+    border-bottom: 1px solid #b7b4b4b6;
+  }
+
+  @media (max-width: 992px) {
+    #content {
+      width: 100%;
+      left: 0;
+      padding:180px 0;
+    }
+    #content  .table-sec {
+     overflow-x: auto;
+    }
+
+
+  } */
+
+</style>
+</head>
+<body>
+
+
+
+        <nav class="navbar" style="background-color:#f4f7f6">
+          <button onclick="toggleSidebar()">&#9776;</button>
+            <div class="navbar-brand" >
+
+                <a href="#" class="nav-link">
+                 <img src="https://naturebellswellness.com/wp-content/uploads/2022/11/Untitled-design-12.webp" width="700" height="230" >
+                </a>
+            </div>
+
+            <div class="nav-rights">
+           <a href="/adminprofile">My Profile</a>
+             <a href="/changepwd">Change Password</a>
+             <a href="/signin" > Logout </a>
+
+         </div>
+
+
+
+         </nav>
+
+
+
+        <div class="sidebar" id="sidebar">
+
+          <ul>
+            <li><a href="/dashboard"><i class="fa-solid fa-house"></i>Dashboard</a></li>
+            <li><a href="/report"><i class="fa-regular fa-calendar-check"></i>Appointment</a></li>
+            <li><a href="/book"><i class='bx bxs-calendar-edit'></i>Scheduling</a></li>
+            <li class="has-submenu">
+              <a href="#link4"><i class="fa-regular fa-calendar-check"></i>Patients <span class="arrow">▶</span></a>
+              <ul class="submenu">
+                <li><a href="/patient">-Patients Details</a></li>
+                <li><a href="/listschedules">-Schedules Details</a></li>
+                <li><a href="/bookingview">-Booking Details</a></li>
+                <li><a href="/numbersession">-Therapy Sessions</a></li>
+              </ul>
+            </li>
+
+            <li class="has-submenu">
+              <a href="#link3"><i class="fa-solid fa-user-doctor"></i>Doctors <span class="arrow">▶</span></a>
+              <ul class="submenu">
+                <li><a href="/addDoctorForm">- Add Doctors</a></li>
+                <li><a href="/viewDoctor">- Doctor's Profile</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#link4"><i class="bx bxs-user"></i>Therapists <span class="arrow">▶</span></a>
+              <ul class="submenu">
+                <li><a href="/Therapists">- Add Therapist</a></li>
+                <li><a href="/viewTherapist">-View all Therapists</a></li>
+              </ul>
+            </li>
+
+            <li><a href="/calendar"><i class='bx bxs-calendar'></i>Calendar</a></li>
+            <li><a href="/therapy"><i class='bx bxs-heart'></i>Therapy</a></li>
+            <li><a href="/treatment"><i class='bx bxs-spa'></i>Treatment</a></li>
+            <li><a href="/department"><i class='bx bxs-building'></i>Department</a></li>
+
+
+          </ul>
+        </div>
+
+
+
+        <div id="content" >
+
+            {% block content %}{% endblock %}
+
+          </div>
+
+          <script>
+            function toggleSidebar() {
+              document.getElementById('sidebar').classList.toggle('show');
+            }
+
+            document.querySelector('.navbar button').addEventListener('click', () => {
+              document.querySelector('.nav-rights').classList.toggle('show');
+            });
+            </script>
+
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle parent menu visibility and submenu
+    document.querySelectorAll('.has-submenu > a').forEach(parentItem => {
+        parentItem.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default anchor behavior
+            const parent = this.parentElement;
+
+            // Toggle the clicked parent menu
+            parent.classList.toggle('active');
+        });
+    });
+
+    // Prevent submenu click from closing parent menu
+    document.querySelectorAll('.submenu a').forEach(submenuItem => {
+        submenuItem.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent the click event from bubbling up
+        });
+    });
+
+    // Handle sidebar toggling on mobile
+    const toggleButton = document.querySelector('.navbar-toggler');
+    const sidebar = document.querySelector('.sidebar');
+    toggleButton.addEventListener('click', () => {
+        sidebar.classList.toggle('show');
+    });
+});
+  </script>
+</body>
+</html>

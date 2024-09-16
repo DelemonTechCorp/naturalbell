@@ -1,0 +1,244 @@
+<html lang="en">
+{% extends "components/header1.html" %}
+{% load static %}
+{% block content %}
+<head>
+    <!-- Bootstrap CSS -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+<!-- Spectrum Color Picker CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css" rel="stylesheet">
+  </head>
+  <style>
+    .m{
+      margin-left:10px;
+      font-size:20px;
+    }
+  </style>
+  <style>
+    .small-btn {
+    padding: 0.2rem 0.4rem; /* Adjust padding as needed */
+    font-size: 0.875rem; /* Adjust font size as needed */
+    margin-left: 10px;
+}
+
+   .k{
+     display: flex;
+     flex-direction: row;
+   }
+   body{
+    background-color: #f2f2f2;}
+  </style>
+
+
+
+        <!-- partial -->
+        <div class="main-panel" style="margin-left: 50px;">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title"> Case sheet </h3>
+              <nav aria-label="breadcrumb ">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Patients</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Case sheet</li>
+                </ol>
+              </nav>
+            </div>
+
+              <div class="col-md-9 grid-margin stretch-card" style="border-radius:10px 10px 0 0 ">
+                <div class="card" style="border-radius:10px 10px 0 0 ">
+                  <div class="card-body">
+                    <h4 class="card-title" style="margin:10px 0 20px 10px;">Patient Details</h4>
+                    <!-- <p class="card-description"> Basic form layout </p> -->
+                    <form class="forms-sample"  id="addLeadForm" method="POST" action="/addpatientreportform" style="padding:20px;">
+                        {% csrf_token %}
+                      <div class="form-group row" style="margin-bottom: 20px;">
+                        <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Patient Name</label>
+                        <div class="col-sm-9">
+                          <input type="text" class="form-control" name="patientname" readonly="True" id="exampleInputUsername2" value="{{patient.name}}" placeholder="Patient Name">
+                        </div>
+
+                      </div>
+                      <div class="form-group row" style="margin-bottom: 20px;">
+                        <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Age</label>
+                        <div class="col-sm-9">
+                          <input type="text" class="form-control"  value="{{patient.age}}"name="age" readonly="True"  placeholder="Age">
+                        </div>
+                      </div>
+                      <div class="form-group row" style="margin-bottom: 20px;">
+                        <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Gender</label>
+                        <div class="col-sm-9">
+                          <input type="text" class="form-control" value="{{patient.gender}}" readonly="True" name="gender">
+                        </div>
+                      </div>
+                      <div class="form-group row" style="margin-bottom: 20px;">
+                        <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Blood group</label>
+                        <div class="col-sm-9">
+                          <input type="text" class="form-control" name="bloodgp" value="{{patient.blood_gp}}"  placeholder="Enter the Blood group of patient">
+                        </div>
+                      </div>
+
+                      <div class="form-group row" style="margin-bottom: 20px;">
+                        <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Therapy</label>
+                        <div class="col-sm-9">
+                            <select id="doctor" name="therapy"  class="form-control" >
+                                <option value="{{patient.therapy.id}}">{{patient.therapy}}</option>
+                                {% for i in Therapies %}
+                                    <option value="{{ i.id }}">{{ i.Therapy }}</option>
+                                {% endfor %}
+                                 <option value="">None</option>
+                            </select>
+                        </div>
+                      </div>
+                      <div class="form-group row" style="margin-bottom: 20px;">
+                        <label for="exampleInputEmail2" class="col-sm-3 col-form-label">No.of session</label>
+                        <div class="col-sm-9" >
+                            <input type="text"   class="form-control"id="session" value="{{patient.number_of_session}}" name="session" placeholder="enter no. of sessions ">
+
+                        </div>
+                      </div>
+
+                      <div class="form-group row" style="margin-bottom: 20px;">
+                        <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Medicine</label>
+                        <div class="col-sm-9">
+                          <textarea rows="3" class="form-control" name="medicine" value="{{patient.medicines}}" placeholder="Medicine"></textarea>
+                        </div>
+                      </div>
+
+
+
+
+
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-9 grid-margin stretch-card" >
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title" style="margin:10px 0 20px 10px;">Clinical details</h4>
+
+
+
+                <div class="form-group row" style="margin-top: 20px;">
+                    <label class="col-sm-3 k col-form-label">Digestion </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="exampleInputUsername2"  value="{{patient.Digestion}}" name="Digestion"placeholder="">
+                    </div>
+                </div>
+                <div class="form-group row" style="margin-top: 20px;">
+                    <label class="col-sm-3 k col-form-label">Sleep
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Sleep}}" name="Sleep"placeholder="">
+                    </div>
+                </div>
+                <div class="form-group row" style="margin-top: 20px;">
+                    <label class="col-sm-3 k col-form-label">Allergies </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="exampleInputUsername2"value="{{patient.Allergies}}" name="Allergies"placeholder="">
+                    </div>
+                </div>
+                <div class="form-group row" style="margin-top: 20px;">
+                    <label class="col-sm-3 k col-form-label">Menstrual history  </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Menstrualhistory}}" name="Menstrualhistory"placeholder="">
+                    </div>
+                </div>
+
+                 <div class="form-group row" style="margin-top: 20px;">
+                    <label class="col-sm-3 col-form-label">Presenting complaints</label>
+                    <div class="col-sm-9">
+                       <textarea type="text"  class="form-control" id="exampleInputUsername2" value="{{patient.Presentingcomplaints}}" name="Presentcomplaints" placeholder=""></textarea>
+                    </div>
+
+                   </div>
+                   <div class="form-group row" style="margin-top: 20px;">
+                    <label class="col-sm-3 col-form-label">History of presenting complaints</label>
+                    <div class="col-sm-9">
+                       <textarea type="text"  class="form-control" id="exampleInputUsername2" value="{{patient.Historyofpresentingcomplaints}}" name="History" placeholder=""></textarea>
+                    </div>
+
+                   </div>
+                   <div class="form-group row" style="margin-top: 20px;">
+                    <label class="col-sm-3 col-form-label">Past Medical and surgical history</label>
+                    <div class="col-sm-9">
+                       <textarea type="text"  class="form-control" id="exampleInputUsername2" value="{{patient.PastMedicalandsurgicalhistory}}" name="PastMedical" placeholder=""></textarea>
+                    </div>
+
+                   </div>
+                   <div class="form-group row" style="margin-top: 20px;">
+                    <label class="col-sm-3 k col-form-label">Regular medications </label>
+                    <div class="col-sm-9">
+                        <textarea type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Regularmedications}}" name="Regularmedications"placeholder=""></textarea>
+                    </div>
+                </div>
+
+
+
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-9 grid-margin stretch-card"  style="border-radius:0 0 10px 10px ;">
+                <div class="card"  style="border-radius:0 0 10px 10px ;">
+                    <div class="card-body">
+                        <h4 class="card-title"  style="margin:10px 0 20px 10px;">Systematic examination findings</h4>
+
+                        <div class="form-group row" style="margin-top: 20px;">
+                            <label class="col-sm-3 k col-form-label">Ama /nirama  </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Amanirama}}"name="Amanirama"placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 20px;">
+                            <label class="col-sm-3 k col-form-label">Dosha predominence</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Doshapredominence}}"name="Dosha"placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 20px;">
+                            <label class="col-sm-3 k col-form-label">Dhathu predominence </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="exampleInputUsername2"value="{{patient.Dhathupredominence}}" name="Dhathu"placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 20px;">
+                            <label class="col-sm-3 k col-form-label">Srothus involved</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Srothusinvolved}}"name="Srothus"placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 20px;">
+                            <label class="col-sm-3 k col-form-label">Treatment</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="exampleInputUsername2"value="{{patient.Treatment}}" name="Treatment"placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 20px;">
+                            <label class="col-sm-3 k col-form-label">Proposed treatment plan
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Proposedtreatmentplan}}"name=">Proposedtreatmentplan"placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 20px;">
+                            <label class="col-sm-3 k col-form-label">Follow up </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Followup}}"name="Followup"placeholder="">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons outside the card -->
+            <div class="col-12 mt-3" style="margin: 25vw;width:200px;">
+                <button type="submit" class="btn btn-primary">Add</button>
+                {% comment %} <button type="button" class="btn btn-secondary"><a style="text-decoration: none; color: white" href="">Back</a></button> {% endcomment %}
+                <br>
+                <br>
+            </div>
+        </form>
+
+  {% endblock %}
