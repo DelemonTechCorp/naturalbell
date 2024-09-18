@@ -153,8 +153,8 @@ def upload_excel(request):
                                     patient_id = f"PAT{get_random_string(length=7).upper()}"
 
                             # Get or create status object
-                            status_obj, created = Status.objects.get_or_create(Status=status)
-
+                            status_obj, created = Statusbooking.objects.get_or_create(Status=status)
+                            patientstatus_obj, created = Status.objects.get_or_create(Status=status)
                             # Create or update the Patient instance
                             patient, created = Patient.objects.update_or_create(
                                 patient_id=patient_id,  # Using phone as a unique identifier
@@ -165,7 +165,7 @@ def upload_excel(request):
                                     'age': patient_age,
                                     'email': nationality,
                                     'admin': admin,
-                                    'status': status_obj
+                                    'status': patientstatus_obj
                                 }
                             )
 
@@ -523,9 +523,18 @@ def addAppointment(request):
     ob2.save()
 
     # Set the status to "Booked" for new bookings
-    booking_status, created = Status.objects.get_or_create(Status='Registered')
+    # booking_status, created = Status.objects.get_or_create(Status='Registered')
+    # ob2.status = booking_status
+    # ob1.status=booking_status
+    # ob1.save()
+    booking_status, created = Statusbooking.objects.get_or_create(Status='Registered')
+    patient_status, created = Status.objects.get_or_create(Status='Registered')
+
+    # Assign the status objects
     ob2.status = booking_status
-    ob1.status=booking_status
+    ob2.save()
+
+    ob1.status = patient_status
     ob1.save()
 
     return HttpResponse("<script>alert('Inserted successfully');window.location='/report'</script>")
@@ -735,7 +744,7 @@ def deleteDoctor(request, id):
 
 def bookingview(request):
     search_query = request.GET.get('searchitem', '')
-    per_page = int(request.GET.get('per_page', 10))
+    per_page = int(request.GET.get('per_page', 100))
     login_id = request.session.get('alid')# Default to 10 if 'per_page' is not provided
     book_list = booking.objects.filter(admin__Lid_id=login_id).order_by('-id')
 
@@ -762,13 +771,15 @@ def editbookingform(request,id):
     patient=Patient.objects.all()
     Therapies=Therapy.objects.all()
     treatment=Treatment.objects.all()
+    status=Statusbooking.objects.all()
     context={
         'Booking':Booking,
         'doctors':doctors,
         'patient':patient,
         'date':str(Booking.reg_date),
         'time':str(Booking.reg_time),
-        'treatment':treatment
+        'treatment':treatment,
+        'status':status
     }
     return render(request,'main/editbooking.html',context)
 def editbooking(request):
@@ -778,18 +789,29 @@ def editbooking(request):
     regtime = request.POST['regtime']
     treatment = request.POST['treatment']
     about = request.POST['about']
+    status = request.POST['status']
     ob1 = booking.objects.get(id=request.session['bid'])
     doctor_instance = Doctor.objects.get(pk=doctor)
     patient_instance = Patient.objects.get(pk=patient)
-    treatment_instance = Treatment.objects.get(pk=treatment)
+    # treatment_instance = Treatment.objects.get(pk=treatment)
+    if treatment:
+        treatment_instance = Treatment.objects.get(pk=treatment)
+        ob1.treatment = treatment_instance
+    else:
+        ob1.treatment = None
+    if status:
+        status_instance = Statusbooking.objects.get(pk=status)
+        ob1.status = status_instance
+    else:
+        ob1.treatment = None
     ob1.Doctor=doctor_instance
     ob1.patientid=patient_instance
-    ob1.reg_date=regdate
-    ob1.reg_time=regtime
+    ob1.reg_date=regdate if regdate else None
+    ob1.reg_time=regtime if regtime else None
     ob1.about=about
-    ob1.treatment=treatment_instance
     ob1.save()
     return HttpResponse("<script>alert('Updated successfully');window.location='/bookingview'</script>")
+    # return(/bookingview)
 def schedules(request):
     doctors = Doctor.objects.all()
     patient=Patient.objects.all()
@@ -923,7 +945,7 @@ def addScheduling(request):
     # for session_num in range(1, session_count + 1):
     #     # Calculate the date for each session
     #     session_date = apdate + timedelta(days=(session_num - 1) * 7)
-    for session_num in range(session_count):
+    for session_num in range(1, session_count + 1):
         session_date = apdate + timedelta(days=session_num)
         # Create the schedule for each session
         ob1 = Schedule(
@@ -1587,6 +1609,8 @@ def addpatientreportform(request):
         medicines = request.POST.get('medicine')
         Digestion = request.POST.get('Digestion')
         Sleep = request.POST.get('Sleep')
+        Diagnosis = request.POST.get('Diagnosis')
+        Examinationfindings = request.POST.get('Examinationfindings')
         Allergies = request.POST.get('Allergies')
         Menstrualhistory = request.POST.get('Menstrualhistory')
         Presentingcomplaints = request.POST.get('Presentingcomplaints')
@@ -1626,9 +1650,18 @@ def addpatientreportform(request):
         ob1.Treatment=Treatment
         ob1.Proposedtreatmentplan=Proposedtreatmentplan
         ob1.Followup=Followup
-        booking_status, created = Status.objects.get_or_create(Status='Attended')
-        ob1.status = booking_status
+        ob1.Diagnosis=Diagnosis
+        ob1.Examinationfindings=Examinationfindings
+        # booking_status, created = Status.objects.get_or_create(Status='Attended')
+        # ob1.status = booking_status
+        # ob1.save()
+        patient_status, created = Status.objects.get_or_create(Status='Attended')
+        booking_status, created = Statusbooking.objects.get_or_create(Status='Attended')
+        ob1.status = patient_status
         ob1.save()
+        booking_instance = booking.objects.get(patientid=ob1)
+        booking_instance.status = booking_status
+        booking_instance.save()
         return HttpResponse("<script>alert('Updated successfully');window.location='/consultedpatient'</script>")
 def casesheets(request,id):
     case=booking.objects.get(id=id)
@@ -1650,7 +1683,7 @@ def consultedpatient(request):
     # patient_list = booking.objects.filter(patientid__status="Consulted").order_by('-id')
     patient_list = booking.objects.filter(
     Doctor=doctor,
-    patientid__status__Status__in=[ "Not Confirmed", "Attended"]
+    status__Status__in=[ "Not Confirmed", "Attended"]
 ).order_by('-id')
     if search_query:
         patient_list = patient_list.filter(

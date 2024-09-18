@@ -49,6 +49,9 @@ class ScheduleAdmin(ImportExportModelAdmin,admin.ModelAdmin):
 @admin.register(Status)
 class StatusAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     list_display = ['Status', 'color']
+@admin.register(Statusbooking)
+class StatusbookingAdmin(admin.ModelAdmin):
+    list_display = ['Status', 'color']
 @admin.register(Department)
 class DepartmentAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     list_display = ['Department', ]

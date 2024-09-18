@@ -60,6 +60,13 @@ class Status(models.Model):
 
     def __str__(self):
         return self.Status
+class Statusbooking(models.Model):
+    Status=models.CharField(max_length=100)
+    color=models.CharField(max_length=100,null=True)
+
+
+    def __str__(self):
+        return self.Status
 class Patient(models.Model):
     admin=models.ForeignKey(Admin,on_delete=models.CASCADE)
     patient_id = models.CharField(max_length=20, unique=True, editable=False,null=True)
@@ -79,23 +86,25 @@ class Patient(models.Model):
     medicines=models.TextField(null=True)
     number_of_session=models.CharField(max_length=50,null=True)
     Followup =models.CharField(max_length=100,null=True)
-    Proposedtreatmentplan=models.CharField(max_length=100,null=True)
+    Proposedtreatmentplan=models.CharField(max_length=500,null=True)
     Treatment=models.CharField(max_length=100,null=True)
     Srothusinvolved=models.CharField(max_length=100,null=True)
     Dhathupredominence =models.CharField(max_length=100,null=True)
     Doshapredominence=models.CharField(max_length=100,null=True)
     Amanirama=models.CharField(max_length=100,null=True)
-    Regularmedications=models.CharField(max_length=100,null=True)
-    PastMedicalandsurgicalhistory=models.CharField(max_length=100,null=True)
-    Historyofpresentingcomplaints  =models.CharField(max_length=100,null=True)
-    Presentingcomplaints=models.CharField(max_length=100,null=True)
-    Menstrualhistory=models.CharField(max_length=100,null=True)
-    Allergies=models.CharField(max_length=100,null=True)
-    Sleep=models.CharField(max_length=100,null=True)
-    Digestion=models.CharField(max_length=100,null=True)
-    Clinicaldetails=models.CharField(max_length=100,null=True)
+    Regularmedications=models.CharField(max_length=500,null=True)
+    PastMedicalandsurgicalhistory=models.CharField(max_length=500,null=True)
+    Historyofpresentingcomplaints  =models.CharField(max_length=500,null=True)
+    Presentingcomplaints=models.CharField(max_length=500,null=True)
+    Menstrualhistory=models.CharField(max_length=500,null=True)
+    Allergies=models.CharField(max_length=500,null=True)
+    Sleep=models.CharField(max_length=500,null=True)
+    Digestion=models.CharField(max_length=500,null=True)
+    Clinicaldetails=models.CharField(max_length=500,null=True)
     update_at= models.DateTimeField(auto_now_add=True, null=True)
     status=models.ForeignKey(Status,on_delete=models.CASCADE,null=True)
+    Examinationfindings=models.CharField(max_length=500,null=True)
+    Diagnosis=models.CharField(max_length=500,null=True)
     def __str__(self):
         return self.name
     def save(self, *args, **kwargs):
@@ -135,7 +144,7 @@ class booking(models.Model):
     reg_date = models.DateField(null=True)
     reg_time = models.TimeField(null=True)
     about=models.TextField(null=True)
-    status=models.ForeignKey(Status,on_delete=models.CASCADE,null=True)
+    status=models.ForeignKey(Statusbooking,on_delete=models.CASCADE,null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
 

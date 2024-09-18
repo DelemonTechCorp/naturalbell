@@ -80,6 +80,8 @@
         <div class="info-item1"><span>Past medical and surgical history:</span> {{case.PastMedicalandsurgicalhistory}}</div>
         <div class="info-item1"><span>History of presenting complaints:</span> {{case.Historyofpresentingcomplaints}}</div>
         <div class="info-item1"><span>Presenting complaints:</span> {{case.Presentingcomplaints}}</div>
+        <div class="info-item1"><span>Regular medications:</span> {{case.Regularmedications}}</div>
+        <div class="info-item1"><span>Examination findings:</span> {{case.Examinationfindings}}</div>
     </div>
     <div style="border-top:1px solid rgb(212, 212, 212);padding:20px 10px;">
         <h3 style="text-align: center;font-size:25px;">Examination Findings</h3>
@@ -87,11 +89,12 @@
         <div class="info-item1"><span>Dosha predominence:</span> {{case.Doshapredominence}}</div>
         <div class="info-item1"><span>Dhathu predominence:</span> {{case.Dhathupredominence}}</div>
         <div class="info-item1"><span>Srothus involved:</span> {{case.Srothusinvolved}}</div>
+        <div class="info-item1"><span>Diagnosis:</span> {{case.Diagnosis}}</div>
         <div class="info-item1"><span>Treatment :</span> {{case.Treatment}}</div>
     </div>
     <div>
-       
-    </div>       
+
+    </div>
 </div>
 <br>
 <center><button type="button" class="btn-update"  id="downloadButton">Download</button></center>
@@ -109,7 +112,7 @@
                     html2canvas: { scale: 2, useCORS: true },
                     jsPDF: {orientation: 'landscape',
                     unit: 'pt', // Change the unit to 'pt' (points)
-                    format: [1122, 793]  } 
+                    format: [1122, 793]  }
                 })
                 .save();
         });
