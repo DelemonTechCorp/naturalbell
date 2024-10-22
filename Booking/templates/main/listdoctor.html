@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "components/header.html" %}
+{% load static %}
+{% block content %}
+  <head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+ </head>
+<style>
+.breadcrumb-sec{
+margin:40px;
+    
+}
+.sec-1{
+    display:flex;
+    flex-wrap:wrap;
+    margin:40px 50px;
+}
+
+body{
+    background-color:  #f2f2f2;
+}
+.row{
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    row-gap: 30px;
+}
+.row .card .round-img{
+    border-radius:50%;
+    border:1px solid rgb(14, 14, 14);
+    object-fit: cover;
+    width:120px;
+    height:120px;
+    
+}
+.row .card{
+    padding:30px 0;
+    border-radius:9px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.row .card a{
+    text-decoration: none;
+    
+}
+.row .card h6{
+    margin:5px 5px;
+}
+.card .body {
+    color: #444;
+    padding: 20px;
+    font-weight: 400;
+}
+.card .text-center {
+    text-align: center !important;
+}
+</style>
+
+
+
+    <div class="breadcrumb-sec">
+        <h1>Doctor</h1>
+        <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+        <a href="#"><i class="fa-solid fa-house"></i></i></a>
+        </li>
+        <li class="breadcrumb-item active">
+           Doctor
+        </li>
+        <li class="breadcrumb-item active">
+            All Doctors
+        </li>
+       </ul>
+    </div>
+
+    <div class="row sec-1">
+        {% for doctor in doctors %}
+        <div class="col-lg-3 col-md-6 col-sm-12" >
+            <div class="card" >
+              
+        <a href="/doctorprofile/{{doctor.id }}">
+                <div class="body text-center">
+                  
+                  {% if doctor.Image %}
+                  <img class="round-img" src="{{ doctor.Image.url }}" > 
+                  {% else %}
+                  <img class="round-img" src="{% static 'image/profile.jpeg' %}" alt="placeholder image">
+                  {% endif %}
+                  <h6>{{ doctor.name }}</h6>
+                  <small>{{ doctor.Speciality }}</small><br>
+                  <span> {{ doctor.About }}</span>
+                </div>
+              </a>
+            </div>
+         
+        </div>
+     
+        {% endfor %}
+       
+{% endblock %}

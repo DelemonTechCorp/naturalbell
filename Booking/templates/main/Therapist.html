@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "components/header.html" %}
+{% load static %}
+{% block content %}
+  <head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+ </head>
+<style>
+
+body{
+    background-color: #f2f2f2;
+}
+.breadcrumb-sec{
+    margin:40px;
+
+}
+.sec-5{
+    margin-bottom:30px;
+}
+#form-sec label:not(.custom-label){
+    font-weight:500;
+    color: #495057;
+    width:120px;
+    min-width: 120px;
+
+
+}
+
+#form-sec{
+    background-color: white;
+    margin:40px 50px;
+    padding:30px;
+    border:1px solid #eee;
+    border-radius: 5px;
+}
+#form-sec input{
+    display: block;
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+}
+#form-sec .sec-2 .form-control{
+    outline: black;
+}
+#form-sec select{
+    width:100%;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+}
+#form-sec .sec-1{
+    display: flex;
+    margin-bottom:30px;
+}
+#form-sec .col-sec{
+    display:flex;
+}
+
+#form-sec .sec-2{
+    margin-bottom:30px;
+}
+#form-sec .sec-2 .head-col{
+    display:flex;
+}
+#form-sec .sec-2 .head-col2{
+    display:flex;
+}
+#form-sec .sec-3 .head-col3{
+    display:flex;
+}
+#form-sec .sec-3{
+    margin-bottom:30px;
+
+}
+#form-sec .sec-4{
+    margin-bottom:30px;
+}
+        .file-input-container {
+            position: relative;
+            display: inline-block;
+            width:100%;
+
+        }
+
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+
+        .custom-label {
+            display: inline-block;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            font-size: 1rem;
+            line-height: 1.5;
+             width:100%;
+            cursor: pointer;
+            height:130px;
+            text-align: center;
+            background-color: #f9f9f9;
+            color: #b9b9b9;
+            border: 1px solid #ced4da;
+            -webkit-transition: border-color .15s linear;
+            transition: border-color .15s linear;padding-top:30px;
+
+
+
+        }
+
+        .custom-label:hover {
+    background-size: 30px 30px;
+    background-image: -webkit-linear-gradient(135deg,#F6F6F6 25%,transparent 25%,transparent 50%,#F6F6F6 50%,#F6F6F6 75%,transparent 75%,transparent);
+    background-image: linear-gradient(-45deg,#F6F6F6 25%,transparent 25%,transparent 50%,#F6F6F6 50%,#F6F6F6 75%,transparent 75%,transparent);
+    -webkit-animation: stripes 2s linear infinite;
+    animation: stripes 2s linear infinite
+}
+
+@media screen and (max-width: 480px) {
+ #form-sec .head-col {
+    flex-direction:column;
+    margin-top:-30px;
+  }
+  .sec-3{
+    margin-top:-30px;
+  }
+
+  #form-sec .head-col2 {
+    flex-direction:column;
+  }
+  #form-sec .head-col3 {
+    flex-direction:column;
+
+  }
+  #form-sec .head-col .col-sec:last-child{
+    margin-left:0 !important;
+
+  }
+  #form-sec .head-col2 .col-sec:last-child{
+    margin-left:0 !important;
+
+  }
+  #form-sec .head-col3 .col-sec:last-child{
+    margin-left:0 !important;
+
+  }
+  #form-sec .col-sec{
+    margin-bottom: 10px;
+  }
+
+}
+@media screen and (max-width: 480px) {
+ #form-sec .col-sec{
+    margin-bottom:20px;
+  }
+  #form-sec  #abc  {
+   margin-top:-20px;
+}
+}
+#form-sec .btn-sec{
+    justify-content: center;
+   align-items: center;
+   display: flex;
+
+}
+@media (max-width: 992px) {
+
+    #content {
+      width: 100%;
+      left: 0;
+      padding:180px 0;
+    }
+
+
+  }
+
+
+</style>
+
+    <div class="breadcrumb-sec">
+    <h1>Add Therapist</h1>
+    <ul class="breadcrumb">
+    <li class="breadcrumb-item">
+    <a href="#"><i class="fa-solid fa-house"></i></a>
+    </li>
+    <li class="breadcrumb-item active">
+        Therapist
+    </li>
+    <li class="breadcrumb-item active">
+        Add Therapist
+    </li>
+   </ul>
+   </div>
+   <form id="form-sec" method="post" action="/addTherapist" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h5 style="margin-bottom: 30px;">Add Therapist</h5>
+    <div class="row sec-1">
+        <div class="col col-sec">
+            <label for="fname">First name:</label>
+        <input type="text" placeholder="First name" name="fname" required>
+        </div>
+        <div class="col col-sec">
+            <label for="fname">Last name:</label>
+        <input type="text" placeholder="Last name" name="lname">
+        </div>
+    </div>
+
+
+<div class="row sec-2">
+    <div class="col head-col">
+        <div class="col col-sec">
+            <label for="fname">Treatment:</label>
+            <select name="treatment" required>
+                <option value="">Treatment</option>
+                {% for i in treatment %}
+                    <option value="{{ i.id }}">{{ i.Treatment }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col col-sec" style="margin-left:20px;">
+            <label for="fname">Gender:</label>
+        <select name="gender">
+            <option value="">Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        </div>
+    </div>
+
+    <div class="col head-col2">
+        <div class="col col-sec">
+            <label for="fname">Email:</label>
+            <input name="email" type="email" placeholder="Enter your Email" required>
+        </div>
+        <div class="col col-sec" style="margin-left:20px ;">
+            <label for="fname">Phone no:</label>
+            <input type="" name="phno"placeholder="Phone" required>
+        </div>
+    </div>
+</div>
+
+<div class="row sec-3">
+
+<div class="col col-sec">
+    <label for="fname">Specialization:</label>
+    <select name="speciality">
+        <option value="">specialization</option>
+        {% for i in Therapies %}
+            <option value="{{ i.id }}">{{ i.Therapy }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="col head-col3">
+<div class="col col-sec">
+    <label for="fname">Place:</label>
+    <input type="text" name="place" placeholder="Place">
+</div>
+
+</div>
+</div>
+<div class="sec-5 file-input-container">
+    <input type="file" id="fileInput" name="image" class="file-input">
+    <label for="fileInput" class="custom-label" id="customLabel">
+        <span><i style="font-size: 40px;" class="fa-solid fa-cloud-arrow-up"></i><br>Drag and drop your file here or click</span>
+    </label>
+</div>
+<div class="sec-4">
+    <textarea rows="4" class="form-control no-resize" placeholder="About you..." name="about"></textarea>
+</div>
+<div class="btn-sec">
+<button type="submit" style="background-color:#033613;opacity: 95%;border:none" class="btn btn-primary">Submit</button>
+</div>
+</form>
+   </body>
+   {% comment %} <script>
+    $(document).ready(function() {
+        // Initialize datepicker
+        $('#datepicker').datepicker({
+            autoclose: true,
+            format: 'yyyy-mm-dd' // You can change the format as per your requirement
+        });
+    });
+</script> {% endcomment %}
+<script>
+    document.getElementById('fileInput').addEventListener('change', function() {
+        var fileName = this.files[0] ? this.files[0].name : 'No file chosen';
+        document.getElementById('customLabel').textContent = fileName;
+    });
+</script>
+{% endblock %}

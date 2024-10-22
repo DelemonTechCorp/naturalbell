@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "components/header.html" %}
+{% load static %}
+{% block content %}
+<head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        a {
+            text-decoration: none;
+            color: red;
+        }
+        #calendar {
+            background-color: white;
+        }
+        .table-container {
+            width: 100%;
+            overflow: auto;
+            margin-left: 28px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        thead th {
+            background-color: #033613;
+            opacity: 95%;
+            color: #fff;
+            padding: 10px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+        }
+        tbody td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+            height: 30px;
+        }
+        h6 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h5 {
+            margin: 10px 0 0 530px;
+            justify-content: center;
+        }
+        .scheduled {
+            color: black;
+        }
+        .button button {
+            background: none;
+            border: hidden;
+        }
+        .button {
+            background-color: #011106;
+            opacity: 85%;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-left: 28px;
+        }
+        .btn-2 .button {
+            background-color: #033613;
+            opacity: 85%;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-left: 28px;
+        }
+        .a {
+            color: rgb(255, 255, 255);
+            padding: 8px 30px;
+            height: 48px;
+            text-align: center;
+        }
+        .filter-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-select {
+            margin-bottom: 10px;
+        }
+        .custom-date-wrapper {
+            display: none;
+            margin-top: 10px;
+        }
+        .custom-date-wrapper label {
+            margin-right: 10px;
+        }
+        .custom-date-wrapper input {
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .navigation-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            margin-left: 0;
+        }
+        .navigation-buttons button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .navigation-buttons button:disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        .navigation-buttons button {
+            background-color: rgb(5, 5, 51);
+            color: white;
+            margin: 0;
+            width: 50px;
+            padding: 5px;
+            cursor: pointer;
+            font-size: 24px;
+            border: none;
+            margin-right: 5px;
+        }
+        .nav-sec {
+            display: flex;
+        }
+        .navigation-buttons button:hover {
+            background-color: rgb(37, 37, 85);
+        }
+        .navigation-buttons #prevDay {
+            border-radius: 5px 0 0 5px;
+        }
+        .navigation-buttons #nextDay {
+            border-radius: 0 5px 5px 0;
+        }
+        .navigation-buttons #calendar {
+            border-radius: 0 5px 5px 0;
+            background-color: rgb(5, 5, 51);
+            color: white;
+            margin: 0;
+            width: 50px;
+            padding: 5px;
+            cursor: pointer;
+            font-size: 24px;
+            border: none;
+            margin-right: 5px;
+        }
+        .nav-sec {
+            display: flex;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-left: 28px;
+        }
+        .button-container .btn-2 {
+            display: flex;
+        }
+        .nav-sec #today {
+            padding: 12px 25px;
+            background-color: grey;
+            border-radius: 5px;
+            border: none;
+            margin-left: 10px;
+        }
+        .nav-sec #today:hover {
+            background-color: rgb(86, 86, 86);
+        }
+        
+        @media (max-width: 992px) {
+            .nav-sec {
+                flex-direction: column;
+                align-items: center;
+            }
+            .nav-sec h5 {
+                margin: 10px 0;
+            }
+            #content {
+                width: 100%;
+                left: 0;
+                padding: 180px 0;
+            }
+        }
+    </style>
+</head>
+<div class="button-container">
+    <div class="nav-sec">
+        <div class="navigation-buttons">
+            <button id="prevDay" title="Previous day">&lt;</button>
+            <button id="nextDay" title="Next day">&gt;</button>
+            <button id="calendarButton" title="Select Date"><i class="fa-solid fa-calendar"></i></button>
+            <input type="date" id="datePicker" style="display: none;">
+        </div>
+        <div>
+            <button id="today">Today</button>
+        </div>
+    </div>
+    <div class="btn-2">
+        <div class="button a">
+            <div class="mdi mdi-apple-keyboard-caps" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Filter</div>
+        </div>
+        <div class="button a"><a style="color: white;" href="{% url 'book' %}">
+                View All</a></div>
+        <div class="button a" id="downloadButton">
+            <div class="mdi mdi-apple-keyboard-caps" type="button">Download</div>
+        </div>
+    </div>
+</div>
+<div>
+    <form method="GET" action="{% url 'book' %}">
+        {% csrf_token %}
+        <div class="collapse mt-3" id="collapseExample">
+            <div class="row mb-3">
+                <div class="col-md-3 mt-3" style="margin-left: 600px; display: flex;">
+                    <select class="form-select" name="doctor" style="width: 700px; padding: 10px;">
+                        <option value="" {% if not request.GET.doctor %}selected{% endif %} disabled hidden>Select Doctor</option>
+                        {% for d in doctors %}
+                        <option value="{{ d.id }}" {% if request.GET.doctor == d.id|stringformat:"s" %}selected{% endif %}>{{ d.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <div class="button a">
+                        <button type="submit" style="text-decoration: none; color: white;">Filter</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="main-panel">
+    <div class="content-wrapper">
+
+        <div class="main" style="margin: 0;">
+
+            <div id="downloadable-content">
+                <h5><b>Appointment Scheduler</b></h5>
+                <div class="download">
+
+                    <h6 id="date-heading">{{ current_date }} ({{ current_weekday }})</h6>
+                    <div class="schedule" id="schedule">
+                        <!-- Placeholder for the schedule grid -->
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                {% for d in doctors %}
+                                <th>{{ d.name }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody id="schedule-body">
+                            <!-- Rows will be generated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id='calendar'></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<script>
+    function populateSchedule(events) {
+        console.log(events);
+        const scheduleBody = document.getElementById('schedule-body');
+
+        // Clear existing schedule
+        scheduleBody.innerHTML = '';
+
+        // Generate time slots and populate with events
+        generateTimeSlots();
+
+        // Populate with new events
+        events.forEach(event => {
+            const startTime = new Date(event.start);
+            const timeSlot = formatTime(startTime);
+            const column = event.column; // This should correspond to the doctor ID or position in the table
+
+            const cell = document.querySelector([data-time="${timeSlot}"][data-column="${column}"]);
+
+            if (cell && !cell.classList.contains('scheduled')) {
+                cell.classList.add('scheduled');
+                cell.style.backgroundColor = event.color; // Set the random color
+                cell.innerHTML = Patient: ${event.patient} <br> About: ${event.about};
+            }
+        });
+    }
+
+    function generateTimeSlots() {
+        const tbody = document.getElementById('schedule-body');
+        const numberOfColumns = document.querySelectorAll('thead th').length;
+
+        let currentTime = new Date();
+        currentTime.setHours(0, 0, 0, 0);
+
+        for (let i = 0; i < 48; i++) {
+            const timeSlot = currentTime.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            const row = document.createElement('tr');
+
+            const timeCell = document.createElement('td');
+            timeCell.textContent = timeSlot;
+            row.appendChild(timeCell);
+
+            for (let j = 1; j < numberOfColumns; j++) {
+                const cell = document.createElement('td');
+                cell.dataset.time = timeSlot;
+                cell.dataset.column = j;
+                row.appendChild(cell);
+            }
+
+            tbody.appendChild(row);
+            currentTime.setMinutes(currentTime.getMinutes() + 30);
+        }
+    }
+
+    function formatTime(time) {
+        return time.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const prevDayButton = document.getElementById('prevDay');
+        const nextDayButton = document.getElementById('nextDay');
+        const calendarButton = document.getElementById('calendarButton');
+        const datePicker = document.getElementById('datePicker');
+        const dateHeading = document.getElementById('date-heading');
+        const todayButton = document.getElementById('today');
+
+        let currentDate = new Date(); // Initialize with the current date
+        updateDateHeading();
+
+        function updateDateHeading() {
+            const formattedDate = currentDate.toLocaleDateString();
+            const weekday = currentDate.toLocaleDateString('en-US', {
+                weekday: 'long'
+            });
+            dateHeading.textContent = ${formattedDate} (${weekday});
+        }
+
+        function changeDate(offset) {
+            currentDate.setDate(currentDate.getDate() + offset);
+            updateDateHeading();
+            updateSchedule();
+        }
+
+        function updateSchedule() {
+            const formattedDate = currentDate.toISOString().split('T')[0];
+            const selectedDoctor = document.querySelector('select[name="doctor"]').value;
+
+            fetch(`/update_schedules/?date=${formattedDate}&doctor=${selectedDoctor}`)
+                .then(response => response.json())
+                .then(data => {
+                    populateSchedule(data.events);
+                });
+        }
+
+        prevDayButton.addEventListener('click', function() {
+            changeDate(-1);
+        });
+
+        nextDayButton.addEventListener('click', function() {
+            changeDate(1);
+        });
+        todayButton.addEventListener('click', function() {
+            location.reload(); // Refresh the page
+        });
+        calendarButton.addEventListener('click', function() {
+            datePicker.click(); // Trigger the date picker
+        });
+
+        datePicker.addEventListener('change', function() {
+            currentDate = new Date(this.value);
+            updateDateHeading();
+            updateSchedule();
+        });
+
+        generateTimeSlots();
+        updateSchedule(); // Initial call to populate the schedule for the current date
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add the download functionality
+        const downloadButton = document.getElementById('downloadButton');
+        downloadButton.addEventListener('click', function() {
+            const element = document.getElementById('downloadable-content'); // Select the specific section
+            html2pdf()
+                .from(element)
+                .set({
+                    margin: [0, 0, 0, 0],
+                    filename: 'schedule.pdf',
+                    html2canvas: {
+                        scale: 2,
+                        useCORS: true
+                    },
+                    jsPDF: {
+                        orientation: 'landscape',
+                        unit: 'in',
+                        format: [element.scrollWidth / 96, element.scrollHeight / 96]
+                    } // Custom size based on content dimensions
+                })
+                .save();
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize flatpickr on the input field
+        const datePicker = flatpickr("#datePicker", {
+            onChange: function(selectedDates, dateStr, instance) {
+                console.log("Selected date: ", dateStr); // Handle the selected date
+            }
+        });
+
+        // Show the date picker when the button is clicked
+        document.getElementById("calendarButton").addEventListener("click", function() {
+            datePicker.open();
+        });
+    });
+</script>
+
+{% endblock %}
+</html>

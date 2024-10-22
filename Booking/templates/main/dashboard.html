@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "components/header.html" %}
+{% load static %}
+{% block content %}
+<head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+</head>
+<style>
+    body {
+        background-color: #f2f2f2;
+    }
+
+
+  #content  .breadcrumb a {
+    text-decoration: none;
+  }
+
+
+
+  #content  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+
+
+  }
+
+  #content  .table-sec {
+    margin: 30px 10px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+  }
+
+  #content  .table-sec h3 {
+    margin: 10px 0 40px 0;
+  }
+
+  #content  .table-sec td {
+    padding: 1rem;
+	text-align: center;
+  }
+
+  #content  .table-sec th {
+    background-color: black;
+    color:white;
+    text-align: center;
+    padding: 1rem;
+
+  }
+
+  #content  .table-sec table tr {
+    border-top: 1px solid #dee2e6;
+  }
+
+  #content  table tr:hover {
+    background-color: #ececec;
+  }
+
+
+  #content .first-sec .col-sec {
+    margin: 10px;
+  }
+
+  #content  .row .card {
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  #content  .row .card .text {
+    font-family: "Ubuntu", sans-serif;
+    font-size: 14px;
+    color: #5A5A5A;
+  }
+
+  #content  .row .card h5 {
+    margin-left: 40px;
+  }
+
+  #content  .row .card div {
+    padding: 10px;
+  }
+
+  #content  .row .card i {
+    margin-right: 15px;
+  }
+
+  #content  .row .card div:first-child {
+    border-bottom: 1px solid #b7b4b4b6;
+  }
+
+  @media (max-width: 992px) {
+    #content {
+      width: 100%;
+      left: 0;
+      padding:180px 0;
+    }
+    #content  .table-sec {
+     overflow-x: auto;
+    }
+
+
+  }
+    .pagination{
+        margin:10px 25px;
+    }
+    .pagination .page-item.active .page-link{
+        background-color: #033613;
+        opacity: 85%;
+        border-color:white;
+        color:white
+    }
+    .pagination .page-link{
+        color:black;
+    }
+
+</style>
+<div class="container-fluid">
+<h1>Dashboard</h1>
+<ul class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="#"><i class="fa-solid fa-house"></i></a>
+    </li>
+    <li class="breadcrumb-item active">
+        <a style="color: #495057;" href="#">Dashboard</a>
+    </li>
+</ul>
+
+
+<div class="row first-sec">
+    <div class="col-sec col-lg-3 col-md-12">
+        <div class="card">
+            <div>
+                <i class="fa-solid fa-user"></i>
+                <span class="text">Total Patients</span><br>
+                <h5>{{ total_patients }}</h5>
+            </div>
+            <div>
+                <i class="fa-solid fa-user-doctor"></i>
+                <span class="text">Total Therapists</span><br>
+                <h5>{{ total_therapists }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-sec col-lg-3 col-md-12">
+        <div class="card">
+            <div>
+                <i class="fa-solid fa-eye"></i>
+                <span class="text">Today Visitors</span><br>
+                <h5>{{ today_created_count }}</h5>
+            </div>
+            <div>
+                <i class="fa-solid fa-dollar-sign"></i>
+                <span class="text">Revenue</span><br>
+                <h5>$18,925</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-sec col-lg-3 col-md-12">
+        <div class="card">
+            <div>
+                <i class="fa-solid fa-thumbs-up"></i>
+                <span class="text">Happy Clients</span><br>
+                <h5>528</h5>
+            </div>
+            <div>
+                <i class="fa-solid fa-face-smile"></i>
+                <span class="text">Smiley Faces</span><br>
+                <h5>2,528</h5>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="search-sec"> -->
+  <div class="page-select">
+      <select id="perPageSelect" onchange="changePerPage()">
+          <option value="5" {% if page_obj.paginator.per_page == 5 %} selected {% endif %}>5</option>
+          <option value="10" {% if page_obj.paginator.per_page == 10 %} selected {% endif %}>10</option>
+          <option value="25" {% if page_obj.paginator.per_page == 25 %} selected {% endif %}>25</option>
+          <option value="30" {% if page_obj.paginator.per_page == 30 %} selected {% endif %}>30</option>
+      </select>
+      <script>
+          function changePerPage() {
+              var perPageSelect = document.getElementById("perPageSelect");
+              var selectedValue = perPageSelect.options[perPageSelect.selectedIndex].value;
+              var queryParams = new URLSearchParams(window.location.search);
+              queryParams.set('per_page', selectedValue);
+              window.location.href = "?" + queryParams.toString();
+          }
+          </script>
+      </div>
+<div class="table-sec">
+    <h3>Scheduled Patient status</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>EMR No</th>
+                <th>Patients</th>
+                <th>Start Date</th>
+                <th>Therapist</th>
+                <th>Therapy</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for status in page_obj %}
+            <tr>
+                <td>{{ status.patientid.patient_id }}</td>
+                <td>{{ status.patientid.name }}</td>
+                <td>{{ status.Date }}</td>
+                <td>{{ status.Therapist }}</td>
+                <td>{{ status.Therapy }}</td>
+                <td>{{ status.patientid.status }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No data available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="pagination">
+  <ul class="pagination">
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+          <a class="page-link" href="?{{ request.GET.urlencode|slice:':-1' }}&page=1&per_page={{ page_obj.paginator.per_page }}">&laquo; First</a>
+      </li>
+      <li class="page-item">
+          <a class="page-link" href="?{{ request.GET.urlencode|slice:':-1' }}&page={{ page_obj.previous_page_number }}&per_page={{ page_obj.paginator.per_page }}" aria-label="Previous">
+              <span aria-hidden="true">&lsaquo;</span>
+          </a>
+      </li>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+      <li class="page-item active">
+          <span class="page-link">{{ num }}</span>
+      </li>
+      {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+      <li class="page-item">
+          <a class="page-link" href="?{{ request.GET.urlencode|slice:':-1' }}&page={{ num }}&per_page={{ page_obj.paginator.per_page }}">{{ num }}</a>
+      </li>
+      {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+      <li class="page-item">
+          <a class="page-link" href="?{{ request.GET.urlencode|slice:':-1' }}&page={{ page_obj.next_page_number }}&per_page={{ page_obj.paginator.per_page }}" aria-label="Next">
+              <span aria-hidden="true">&rsaquo;</span>
+          </a>
+      </li>
+      <li class="page-item">
+          <a class="page-link" href="?{{ request.GET.urlencode|slice:':-1' }}&page={{ page_obj.paginator.num_pages }}&per_page={{ page_obj.paginator.per_page }}">&raquo; Last</a>
+      </li>
+      {% endif %}
+  </ul>
+</div>
+</div>
+{% endblock %}
+</html>

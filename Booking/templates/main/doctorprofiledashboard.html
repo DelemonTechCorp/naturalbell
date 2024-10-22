@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "components/header1.html" %}
+{% load static %}
+{% block content %}
+  <head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+  </head>
+  <style>
+    .box1 {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 700px;
+      color: #5A5A5A;
+      background: #f7f7f7;
+      border-radius: 8px;
+      margin-top: 20px;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+    .box2 {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 700px;
+      color: #5A5A5A;
+      background: #000;
+      background: linear-gradient(135deg, #ededed, #c4f4d3);
+      border-radius: 8px;
+      margin-top: 20px;
+      padding: 20px;
+    }
+    .profile-picture-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin-bottom: 20px;
+    }
+    .profile-picture {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: #ccc;
+    }
+    .edit-icon {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background-color: #326442;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .profile-details {
+      text-align: center;
+    }
+    .edit-button:hover {
+      background-color: #07421a;
+    }
+    .box1 h3 {
+      margin-bottom: 30px;
+    }
+    .box1 h4 {
+      font-size: medium;
+      opacity: 50%;
+    }
+    .box3 {
+      width: 200px;
+      height: 70px;
+      background-color: #ffffff;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-control {
+      border-radius: 5px;
+      padding: 10px;
+    }
+    .form-check-input {
+      margin-top: 5px;
+    }
+    .btn-update {
+      background-color: #326442;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn-update:hover {
+      background-color: #033613;
+    }
+    .file-input {
+      display: none;
+    }
+  </style>
+  <script>
+    function triggerFileInput() {
+      document.getElementById('file-input').click();
+    }
+
+    function updateProfilePicture(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profile-picture').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+
+  <div class="container">
+    <div class="row">        
+      <div class="col-md-4 col-12">
+        <div class="box1">
+            {% for doctor in doctors%}
+          <div class="profile-picture-container">
+            {% if doctor.Image %}
+            <img src="{{doctor.Image.url}}?{{ doctor.updated_at.timestamp}}" alt="Profile Picture" class="profile-picture" id="profile-picture">
+            {% else %}
+            <img src="{% static 'image/profile.jpeg' %}" alt="Profile Picture" class="profile-picture" id="profile-picture">
+            {% endif %}
+            <button class="edit-icon" type="button" onclick="triggerFileInput()"><i class="fas fa-edit"></i></button>
+          </div>
+          <div class="profile-details">
+            <h3>{{doctor.name}}</h3>
+            <div class="box3">
+              <h4>E-MAIL</h4>
+              <p>{{doctor.email_id}}</p>
+            </div>
+            <div class="box3">
+              <h4>PHONE</h4>
+              <p>{{doctor.contact_no}}</p>
+            </div>
+            <div class="box3">
+              <h4>SPECIALIZATION</h4>
+              <p>{{doctor.Speciality}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="box2">
+          <form method="post" action="{% url 'editdoctor' %}" enctype="multipart/form-data">
+            <input type="hidden" name="origin" value="doctor">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name" name="name" value="{{doctor.name}}">
+            </div>
+            <div class="form-group">
+              <label for="address">Email</label>
+              <input type="text" class="form-control" id="address" name="email" value="{{doctor.email_id}}" placeholder="Enter your address">
+            </div>
+            <div class="form-group">
+              <label for="address">Phone Number</label>
+              <input type="text" class="form-control" id="address" name="phno" value="{{doctor.contact_no}}" placeholder="Enter your address">
+            </div>
+            <div class="form-group">
+              <label for="city">Specialization</label>
+              <input type="text" class="form-control" id="address" name="speciality" value="{{doctor.Speciality }}" placeholder="Enter your qualification">
+            </div>
+            <div class="form-group">
+              <label for="department">Department</label>
+              <select name="department" class="form-control">
+                <option value="{{ doctor.Department.id }}">{{ doctor.Department.Department}}</option>
+                {% for i in department %}
+                <option value="{{ i.id }}">{{ i.Department }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="specialization">Adress</label>
+              <input type="text" class="form-control" name="place" id="place" value="{{doctor.place}}" placeholder="Enter your specialization">
+            </div>
+            <div class="form-group">
+              <label for="specialization">About</label>
+              <textarea rows="2" class="form-control" placeholder="About you..." name="about">{{doctor.About}}</textarea>
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender</label><br>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="male" value="Male" {% if doctor.gender == "Male" %}checked{% endif %}>
+                <label class="form-check-label" for="male">Male</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="female" value="Female" {% if doctor.gender == "Female" %}checked{% endif %}>
+                <label class="form-check-label" for="female">Female</label>
+              </div>
+            </div>
+            <button type="submit" class="btn-update">Update</button>
+            <input type="file" id="file-input" class="file-input" name="image" accept="image/*" onchange="updateProfilePicture(event)">
+          </form>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+</html>

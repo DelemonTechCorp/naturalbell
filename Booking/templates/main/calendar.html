@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "components/header.html" %}
+{% load static %}
+{% block content %}
+  <head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+ </head>
+<style>
+a{
+    text-decoration:none;
+    color:#033613;opacity: 85%;
+    
+}
+#calendar{
+  background-color:white;
+}
+.button {
+    padding: 8px 16px;
+    border-color: black;
+    background-color:#033613; opacity: 75%;;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px; /* Adjust spacing between buttons */
+    
+}
+.a{
+    
+    color: rgb(255, 255, 255);
+    width:110px;
+    text-align:center;
+    
+}
+@media (max-width: 992px) {
+    
+    #content {
+      width: 100%;
+      left: 0;
+      padding:180px 0;
+    }
+
+   
+  }
+
+
+</style>
+{% comment %} <div class="button a">
+    <div  class="mdi mdi-apple-keyboard-caps" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Filter</div>
+</div> {% endcomment %}
+<div>
+<form method="GET" action="{% url 'calendar' %}">
+    <input type="hidden" name="origins" value="admin">
+    <div class="collapse mt-3" id="collapseExample">
+        <div class="row mb-3">
+            
+            
+            <div class="col-md-3">
+                <select class="form-select" name="therapist">
+                    <option selected disabled hidden>Select Therapist</option>
+                    {% for t in therapist %}
+                        <option value="{{ t.id }}">{{ t.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" name="patient">
+                    <option selected disabled hidden>Select Patient</option>
+                    {% for p in patient %}
+                        <option value="{{ p.id }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            
+        </div>
+        <center>
+          
+                <div class="button a">
+                    <div  class="mdi mdi-apple-keyboard-caps" type="submit" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Filter</div>
+                </div>
+                {% comment %} <div class="button a">
+                    <div  class="mdi mdi-apple-keyboard-caps"  onclick="clearFilter()" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Filter</div>
+                </div> {% endcomment %}
+           
+        </center>
+    </div>
+</form>
+    </div>
+<div class="main-panel">
+    <div class="content-wrapper">
+        
+        <div class="page-header">
+            <h3 class="page-title">Calendar</h3>
+        </div>
+        <div id='calendar'></div>
+    </div>
+</div>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            initialView: 'dayGridMonth',
+            navLinks: true,
+            businessHours: true,
+            editable: true,
+            selectable: true,
+            events: {% autoescape off %}{{ events|safe }}{% endautoescape %},
+            eventDisplay: 'block',
+            eventTextColor: 'white',
+            themeSystem: 'bootstrap' // Set themeSystem to 'bootstrap'
+        });
+
+        calendar.render();
+    });
+</script>
+
+{% endblock %} 

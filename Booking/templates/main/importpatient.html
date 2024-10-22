@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "components/header.html" %}
+{% load static %}
+{% block content %}
+  <head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+ </head>
+ <style>
+.upload-form input{
+  height: 50px;
+  border: hidden;
+  background-color: white;
+  width: 100%;
+  display: flex;
+  border-radius: 5px;
+  padding: 2%;
+  align-items: center;
+  justify-content: center;
+}
+.upload-form button{
+  background-color: #F4516C;
+  color: white;
+  width: 100px;
+  height: 35px;
+  border-radius: 5px;
+  border: hidden;
+}
+.upload-form a{
+  color: blue;
+}
+.upload-form a span{
+  color: blue;
+  margin-right: 10px;
+
+}
+#error-message {
+  color: red;
+}
+</style>
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="page-header">
+      <h3 class="page-title">Patients > <span style="opacity: 0.6;"> Upload Patients </span></h3>
+    </div>
+    <div class="container">
+      {% comment %} <h4>Upload Leads</h4> {% endcomment %}
+      <div class="col-md-6">
+        {% if error_message %}
+        <div id="error-message">{{ error_message }}</div>
+        {% endif %}
+        <form class="upload-form" method="POST" enctype="multipart/form-data"  action="/upload_excel">
+          {% csrf_token %}
+          <input type="file" name="excel_file" accept=".xlsx" required/>
+          <div class="mt-3">
+            <a href="{% static 'image/patients.xlsx' %}" download><span class="mdi mdi-download"></span>Sample file</a>
+          </div>
+          <button class="mt-4" style="background-color:#033613;opacity: 85%;" type="submit">Upload</button>
+          <p class="mt-3 ">Please make sure to keep date in yyyy-mm-dd or dd-mm-yyyy format. Example: 2021-12-31 or 31-12-2021</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

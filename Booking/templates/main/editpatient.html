@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "components/header.html" %}
+{% load static %}
+{% block content %}
+  <head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+ </head>
+
+<style>
+    body{
+    background-color: #f2f2f2;
+}
+.breadcrumb-sec{
+   margin:40px;
+
+}
+#form-sec .col-sec{
+    display:flex;
+}
+#form-sec label{
+    font-weight:500;
+     color: #495057;
+    width:100px;
+    margin-right:10px;
+
+}
+#form-sec{
+    background-color: white;
+    margin:40px 50px;
+    padding:30px;
+    border:1px solid #eee;
+    border-radius: 5px;
+}
+#form-sec input{
+    display: block;
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+}
+#form-sec select{
+    width:100%;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+}
+#form-sec .sec-1{
+    display: flex;
+    margin-bottom:30px;
+}
+
+
+#form-sec .sec-2{
+    margin-bottom:30px;
+}
+
+#form-sec .sec-3{
+    margin-bottom:30px;
+}
+#form-sec .sec-4{
+    margin-bottom:30px;
+}
+.sec-2 .col-sec #dob{
+    height:40px;
+}
+@media screen and (max-width: 480px) {
+ #form-sec .col-sec{
+    margin-bottom:20px;
+  }
+  #form-sec  #abc  {
+   margin-top:-20px;
+}
+}
+#form-sec .btn-sec{
+   justify-content: center;
+   align-items: center;
+   display: flex;
+}
+@media (max-width: 992px) {
+
+    #content {
+      width: 100%;
+      left: 0;
+      padding:180px 0;
+    }
+
+
+  }
+
+</style>
+
+    <div class="breadcrumb-sec">
+    <h1>Update Patient</h1>
+    <ul class="breadcrumb">
+    <li class="breadcrumb-item">
+    <a href="#"><i class='bx bxs-dashboard'></i></a>
+    </li>
+    <li class="breadcrumb-item active">
+        Patient
+    </li>
+   </ul>
+   </div>
+
+    <form id="form-sec" method="post" action="/editpatient">
+         {% csrf_token %}
+        <h5 style="margin-bottom: 30px;">Edit Patient</h5>
+        <div class="row sec-1">
+            <div class="col-lg-6 col-sec">
+            <label for="fname">Name:</label>
+            <input type="text" id="fname" name="name" value="{{ patient.name}}" placeholder="enter your name">
+           </div>
+
+            <div class="col-lg-6 col-sec">
+                <label for="email">Nationality:</label>
+                <input type="text" id="email" value="{{ patient.email}}" name="email" placeholder="enter your nationality">
+
+            </div>
+        </div>
+
+
+    <div class="row sec-2">
+        <div class="col head-col">
+            <div class="col col-sec"  id="abc" style="margin-bottom:20px">
+                <label for="dob">Date of birth:</label>
+                 <input type="date" id="dob" value="{{date }}" name="dob" name="birthday">
+            </div>
+            <div class="col col-sec">
+                <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+                <option value="{{patient.gender}}">{{patient.gender}}</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+            </div>
+        </div>
+
+        <div class="col head-col2">
+            <div class="col col-sec" style="margin-bottom:30px">
+                <label for="number">Phone no:</label>
+                <input type="text" id="number"  value="{{ patient.phone}}"name="phno" placeholder="enter your phone number">
+            </div>
+            <div class="col col-sec" >
+                <label for="doctor">Doctor:</label>
+    <select id="doctor" name="doctor" >
+        <option value="{{patient.doctor.id}}">{{patient.doctor.name}}</option>
+        {% for i in doctors %}
+            <option value="{{ i.id }}">{{ i.name }}</option>
+        {% endfor %}
+    </select>
+            </div>
+        </div>
+    </div>
+
+<div class="row sec-3">
+    <div class="col col-sec" id="abc" >
+        <label for="email">Status</label>
+        <select id="doctor" name="status">
+            <option value="{{patient.status.id}}">{{patient.status}}</option>
+            {% for i in status %}
+                <option value="{{ i.id }}">{{ i.Status }}</option>
+            {% endfor %}
+        </select>
+  </div>
+</div>
+{% comment %}
+  <div class="col col-sec">
+    <label for="time">Therapy:</label>
+    <select id="doctor" name="therapy">
+        <option value="{{patient.therapy.id}}">{{patient.therapy}}</option>
+        {% for i in Therapies %}
+            <option value="{{ i.id }}">{{ i.Therapy }}</option>
+        {% endfor %}
+    </select>
+
+  </div>
+
+
+   </div>
+   <div class="row sec-new">
+    <div class="col col-sec" id="abc" >
+        <label for="session">No. of sessions:</label>
+                <input type="text" id="session" value="{{patient.number_of_session}}" name="session" placeholder="enter no. of sessions blood">
+  </div>
+  <div class="col col-sec" id="abc" >
+    <label for="medicine">Medicine:</label>
+            <textarea rows="2" id="medicine"  class="form-control no-resize"  name="medicine" placeholder="enter medicine">{{patient.medicines}}</textarea>
+</div>
+ </div> {% endcomment %}
+    <div class="sec-4">
+        <label for="doctor">Notes:</label>
+        <textarea rows="6"name="note" class="form-control no-resize" placeholder="Please type what you want...">{{patient.note}}</textarea>
+    </div>
+    <div class="btn-sec">
+    <button type="submit" style="background-color:#033613;opacity: 95%;border:none" class="btn btn-primary" class="btn btn-primary">Update</button>
+
+</div>
+    </form>
+
+{% endblock %}

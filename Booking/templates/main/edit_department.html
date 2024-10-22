@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "components/header.html" %}
+{% load static %}
+{% block content %}
+<head>
+    <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
+</head>
+<style>
+    body {
+        background-color: #f2f2f2;
+    }
+
+    .content {
+        background-color: #fff;
+        margin: 5px 50px;
+        padding: 15px;
+    }
+
+    .breadcrumb-sec {
+        margin: 40px;
+    }
+
+    .sec-2 div {
+        margin: 10px;
+    }
+
+    .sec-2 input:not(.button) {
+        width: 100%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #a5a3a3
+    }
+
+    .button {
+        background-color: #1c6c1c;
+        padding: 12px 30px; /* Larger padding */
+        border: none;
+        border-radius: 6px; /* Rounded corners */
+        color: aliceblue;
+        font-size: 16px; /* Adjust font size */
+        transition: background-color 0.3s ease; /* Smooth transition */
+    }
+
+    .button:hover {
+        background-color: #134913; /* Darker shade on hover */
+    }
+
+    label {
+        margin-bottom: 8px;
+        font-size: 18px;
+    }
+</style>
+
+<body>
+    <div class="breadcrumb-sec">
+        <h1>Edit Department</h1>
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#"><i class='bx bxs-dashboard'></i></a>
+            </li>
+            <li class="breadcrumb-item active">
+                Edit Department
+            </li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <form method="post" action="{% url 'edit_department' department.id %}">
+            {% csrf_token %}
+            <div class="sec-2">
+                <div>
+                    <label for="department"><b>Edit Department</b></label><br>
+                    <input type="text" id="department" name="department" value="{{ department.Department }}" required>
+                </div>
+                <div style="justify-content: center; align-items: center; display: flex;">
+                    <input type="submit" class="button" value="Submit">
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+{% endblock %}
+</html>
