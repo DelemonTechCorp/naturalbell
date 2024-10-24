@@ -20,7 +20,7 @@
     table th {
         padding: .8rem;
         text-align: center;
-        background-color: black;
+        background-color: #1988a0;
         color: white;
     }
 
@@ -44,11 +44,10 @@
     }
 
     .breadcrumb-sec {
-        margin: 40px;
     }
 
     .search-sec .button-sec {
-        background-color: rgb(216, 27, 27);
+        background-color: #1988a0;
         color: white;
         padding: 10px 25px;
         border-radius: 5px;
@@ -75,7 +74,7 @@
     }
 
     .search-sec .addbtn {
-        background-color: #008000;
+        background-color: #1988a0;
         color: white;
         padding: 12px 30px; /* Larger padding */
         border-radius: 6px; /* Rounded corners */
@@ -197,7 +196,9 @@
         cursor: pointer;
         transition: background-color 0.3s ease; /* Smooth transition */
     }
-
+    h1{
+    color:#1988a0;
+    }
     .sec-1 {
         margin: 40px 54px 0 10px;
 
@@ -353,7 +354,7 @@
     }
 
     .pagination .page-item.active .page-link {
-        background-color: #033613;
+        background-color: #1988a0;
         opacity: 85%;
         border-color: white;
         color: white
@@ -410,9 +411,9 @@
             </div>
             <form method="get" action="{% url 'treatment' %}">
                 <input type="search" name="search" value="{{ search_query }}" placeholder="Search">
-                <button type="submit" style="background-color:#033613;opacity: 85%;">Search</button>
-                <button type="button" style="background-color:#033613;opacity: 85%;" onclick="window.location.href='{% url 'treatment' %}'">View all</button>
-                <button id="openPopupBtn" style="background-color:#033613;opacity: 85%;" class="addbtn" type="button">Add</button>
+                <button type="submit" class="addbtn">Search</button>
+                <button type="button" class="addbtn" onclick="window.location.href='{% url 'treatment' %}'">View all</button>
+                <button id="openPopupBtn"  class="addbtn" type="button">Add</button>
             </form>
         </div>
     </div>

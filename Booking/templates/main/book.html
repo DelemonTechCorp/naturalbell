@@ -25,7 +25,7 @@
             table-layout: fixed;
         }
         thead th {
-            background-color: #033613; opacity: 95%;
+            background-color: #1a8ba6; opacity: 95%;
             color: #fff;
             padding: 10px;
             text-align: left;
@@ -62,7 +62,8 @@
         }
 
         .button {
-            background-color:#011106; opacity: 85%;;
+            background-image: linear-gradient(to bottom, #3dbad6, #32aac6, #279ab6, #1a8ba6, #0b7c96);
+            opacity: 85%;;
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -76,12 +77,9 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-right: 10px;
-            margin-left:28px; /* Adjust spacing between buttons */
             color: rgb(255, 255, 255);
-            width:100px;
-            padding:0 5px;
-            height:50px;
+            width:auto;
+            padding:8px;
             text-align:center;
         }
 
@@ -169,24 +167,24 @@
 
     .nav-sec{
         display:flex;
-
+        justify-content: center;
     }
     .button-container{
-        display: flex;
-        justify-content: space-between;
-        margin-left: 28px;
+        display: grid;
+        grid-template-columns: auto;
+        margin-left: 5px;
       }
       .button-container .btn-2{
-
         display:flex;
-
+        justify-content: center;
       }
 
     .nav-sec #today{
         padding:12px 25px;
-        background-color: grey;
+        background-color: #000;
         border-radius:5px;
         border:none;margin-left:10px;
+        color: #fff;
     }
     .nav-sec #today:hover{
         background-color: rgb(86, 86, 86);
@@ -220,9 +218,10 @@
 
        }
        .btn-sec button{
-        background-color:#d6d5d5;
-        border: 2px solid #ccc;
+        background-color:#1a8ba6;
+        border: 2px solid #fff;
         margin-top: 20px;
+        color: #fff;
       }
 
 .status-container {
@@ -310,10 +309,10 @@
     </div>
 
 
-    <button class="button"   type="button" onclick="window.location.href='/schedules';">Assign to Therapist</button>
+    <button class="button" type="button" onclick="window.location.href='/schedules';">Assign to Therapist</button>
 
 
-    <button class="button"  type="button" onclick="window.location.href='/listschedules';">View in Table format </button>
+    <button class="button" type="button" onclick="window.location.href='/listschedules';">View in Table format </button>
 
     </div>
 </div>

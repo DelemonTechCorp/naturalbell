@@ -20,7 +20,7 @@
     table th {
         padding: .8rem;
         text-align: center;
-        background-color: black;
+        background-color: #1988a0;
         color: white;
     }
 
@@ -44,12 +44,10 @@
     }
 
     .breadcrumb-sec {
-        margin: 40px;
     }
-
-    
-
-   
+    h1{
+        color:#1988a0;
+    }
 
     .sec-1 .search-sec {
         margin: 0 50px 10px 0;
@@ -64,7 +62,7 @@
     }
 
     .search-sec .addbtn {
-        background-color: #008000;
+        background-color: #1988a0;
         color: white;
         padding: 12px 30px; /* Larger padding */
         border-radius: 6px; /* Rounded corners */
@@ -80,7 +78,7 @@
 
     .sec-1 .search-sec button:not(.addbtn) {
         border-radius: 6px; /* Rounded corners */
-        background-color: rgb(75, 75, 75);
+        background-color: #1988a0;
         padding: 10px 20px; /* Adjusted padding */
         margin-left: 10px;
         color: white;
@@ -341,7 +339,7 @@
     }
 
     .pagination .page-item.active .page-link {
-        background-color: #033613;
+        background-color: #1988a0;
         opacity: 85%;
         border-color: white;
         color: white
@@ -398,9 +396,9 @@
             </div>
             <form method="get" action="{% url 'department' %}">
                 <input type="search" name="search" value="{{ search_query }}" placeholder="Search">
-                <button type="submit" style="background-color:#033613;opacity: 85%;">Search</button>
-                <button type="button" style="background-color:#033613;opacity: 85%;" onclick="window.location.href='{% url 'department' %}'">View all</button>
-                <button id="openPopupBtn" style="background-color:#033613;opacity: 85%;" class="addbtn" type="button">Add</button>
+                <button type="submit" >Search</button>
+                <button type="button"  onclick="window.location.href='{% url 'department' %}'">View all</button>
+                <button id="openPopupBtn"  class="addbtn" type="button">Add</button>
             </form>
         </div>
     </div>

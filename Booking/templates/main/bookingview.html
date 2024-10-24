@@ -19,7 +19,7 @@
     }
     table th{
         padding: .8rem;text-align: center;
-        background-color: black;
+        background-color: #1988a0;
         color: white;
     }
     table td{
@@ -33,7 +33,9 @@
     table tr:hover{
         background-color:  #ececec;
     }
-
+    h1{
+        color: #1988a0;
+    }
     .content{
         background-color:#fff;
         margin:5px 50px;
@@ -41,15 +43,15 @@
 
     }
     .breadcrumb-sec{
-    margin:40px;
     }
 
 
 
     .search-sec .button-sec{
-        background-color: rgb(216, 27, 27);
+        background-color:#1988a0;
         color: white;
-        padding:10px 25px;
+        padding:8px;
+        border: hidden;
         border-radius: 5px;
         margin-right:10px;
 
@@ -69,10 +71,11 @@
     }
     .sec-1 .search-sec button{
         border-radius: 4px;
-        background-color: rgb(75, 75, 75);
-        padding:5px;
+        background-color:#1988a0;
+        padding:8px;
         margin-left:10px;
         color:white;
+        border: hidden;
     }
     .dropdown {
         position: relative;
@@ -208,7 +211,7 @@
         margin:10px 25px;
     }
     .pagination .page-item.active .page-link{
-        background-color: #033613;
+        background-color: #1988a0;
         opacity: 85%;
         border-color:white;
         color:white
@@ -302,12 +305,12 @@
         </div>
 <form class="form"id="searchForm" method="post" action="{% url 'searchbooking' %}">
     {% csrf_token %}
-    <input type="search" name="searchitem" placeholder="search"><button  style="background-color:#033613;opacity: 85%;">Search</button>
-    <button style="background-color:#033613;opacity: 85%;"  onclick="window.location.href='/bookingview';">View all</button>
+    <input type="search" name="searchitem" placeholder="search"><button>Search</button>
+    <button  onclick="window.location.href='/bookingview';">View all</button>
 </form>
-<button style="background-color:#033613;opacity: 85%;" onclick="window.location.href='/appointment';">Book An Appointment</button>
+<button  onclick="window.location.href='/appointment';">Book An Appointment</button>
 
-<button style="background-color:#033613;opacity: 85%;" onclick="window.location.href='/report';">Back to Report page</button>
+<button  onclick="window.location.href='/report';">Back to Report page</button>
  </div>
  </div>
 

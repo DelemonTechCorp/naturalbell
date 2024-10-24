@@ -25,7 +25,7 @@
             table-layout: fixed;
         }
         thead th {
-            background-color: #033613;
+            background-color: #1a8ba6;
             opacity: 95%;
             color: #fff;
             padding: 10px;
@@ -89,7 +89,7 @@
             cursor: not-allowed;
         }
         .navigation-buttons button {
-            background-color: rgb(5, 5, 51);
+            background-image: linear-gradient(to bottom, #3dbad6, #32aac6, #279ab6, #1a8ba6, #0b7c96);
             color: white;
             margin: 0;
             width: 50px;
@@ -113,7 +113,7 @@
         }
         .navigation-buttons #calendar {
             border-radius: 0 5px 5px 0;
-            background-color: rgb(5, 5, 51);
+            background-image: linear-gradient(to bottom, #3dbad6, #32aac6, #279ab6, #1a8ba6, #0b7c96);
             color: white;
             margin: 0;
             width: 50px;
@@ -154,8 +154,9 @@
             border-radius: 10px 0 0 0;
         }
         .btn-sec button{
-            background-color:#d6d5d5;
-            border: 2px solid #ccc;
+            background-color:#3DBAD6;
+            border: 2px solid #fff;
+            color: #fff;
             margin-top: 20px;
           }
 
@@ -172,7 +173,7 @@
                 left: 0;
                 padding: 180px 0;
             }
-            btn-2 {
+            .btn-2 {
                 display: flex;
                 flex-direction: column;
           }
@@ -264,9 +265,10 @@
             margin-left: 28px;
         } */
         .btn-2 .button {
-            background-color: #033613;
+            background-image: linear-gradient(to bottom, #3dbad6, #32aac6, #279ab6, #1a8ba6, #0b7c96);
             opacity: 85%;
             border: none;
+            font-size: 14px;
             border-radius: 4px;
             cursor: pointer;
             margin-right: 10px;
@@ -294,7 +296,7 @@
             <input type="date" id="datePicker" style="display: none;">
         </div>
         <div>
-            <button id="today">Today</button>
+            <button class="text-light" style="background-color: #000;" id="today">Today</button>
         </div>
     </div>
     <div class="btn-2">
@@ -454,7 +456,7 @@
                 <h5><b>Doctor Appointment Scheduler</b></h5>
                 <div class="download">
 
-                    <h6 id="date-heading">{{ current_date }} ({{ current_weekday }})</h6>
+                    <h6 id="date-heading" >{{ current_date }} ({{ current_weekday }})</h6>
                     <div class="schedule" id="schedule">
                         <!-- Placeholder for the schedule grid -->
                     </div>

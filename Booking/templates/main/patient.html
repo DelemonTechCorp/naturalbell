@@ -10,14 +10,14 @@
  </head>
 <style>
     body{
-        background-color: #f2f2f2;
+        background-color: #fff;
     }
     table{
         width:100%;
     }
     table th{
         padding: .8rem;text-align: center;
-        background-color: black;
+        background-color: #1988a0;
         color: white;
     }
 
@@ -40,7 +40,7 @@
 
     }
     .breadcrumb-sec{
-    margin:40px;
+    /* margin:40px; */
     }
 
 
@@ -67,10 +67,11 @@
         border: none;
     }
     .sec-1 .search-sec button{
-        border-radius: 4px;
-        background-color: rgb(75, 75, 75);
-        padding:5px;
+        border-radius: 5px;
+        background-image: linear-gradient(to bottom, #3dbad6, #32aac6, #279ab6, #1a8ba6, #0b7c96);
+        padding:8px;
         margin-left:10px;
+        border: hidden;
         color:white;
     }
     .dropdown {
@@ -209,7 +210,7 @@
         margin:10px 25px;
     }
     .pagination .page-item.active .page-link{
-        background-color: #033613;
+        background-color: #1988a0;
         opacity: 85%;
         border-color:white;
         color:white
@@ -274,19 +275,17 @@
 
 </style>
 <div class="breadcrumb-sec">
-    <h1>Patients</h1>
+    <h1 style="color: #1988a0;">Patients</h1>
     <ul class="breadcrumb">
     <li class="breadcrumb-item">
-    <a href="#"><i class='bx bxs-dashboard'></i></a>
+    <a href="#" style="color: #1988a0;"><i class='bx bxs-dashboard'></i></a>
     </li>
-    <li class="breadcrumb-item active">
+    <li style="color: #1988a0;" class="breadcrumb-item active">
         Patients
     </li>
    </ul>
 </div>
 <div class="sec-1">
-
-<div class="search-sec">
     <div class="page-select">
         <select id="perPageSelect" onchange="changePerPage()">
             <option value="5" {% if page_obj.paginator.per_page == 5 %} selected {% endif %}>5</option>
@@ -304,16 +303,17 @@
             }
             </script>
         </div>
+<div class="search-sec">
     <form class="form"id="searchForm" method="post" action="{% url 'searchpatient' %}">
         {% csrf_token %}
     <input type="search" name="searchitem" value="{{ search_query }}" placeholder="Search">
-    <button type="submit" style="background-color:#033613;opacity: 85%;">Search</button>
-    <button type="button" style="background-color:#033613;opacity: 85%;" onclick="window.location.href='{% url 'patient' %}'">View all</button>
+    <button type="submit" >Search</button>
+    <button type="button"  onclick="window.location.href='{% url 'patient' %}'">View all</button>
 
 </form>
-<button onclick="window.location.href='/importform';" style="background-color:#033613;opacity: 85%;">Import</button>
-<button style="background-color:#033613;opacity: 85%;" onclick="window.location.href='{% url 'export_patients_to_excel' %}';">Export</button>
-<button style="background-color:#033613;opacity: 85%;" onclick="window.location.href='/report';">Back to Report page</button>
+<button onclick="window.location.href='/importform';">Import</button>
+<button  onclick="window.location.href='{% url 'export_patients_to_excel' %}';">Export</button>
+<button  onclick="window.location.href='/report';">Back to Report page</button>
  </div>
 
    <div class="content">

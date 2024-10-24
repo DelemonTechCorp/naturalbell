@@ -4,21 +4,24 @@
 {% load static %}
 {% block content %}
 <head>
+    <link rel="shortcut icon" href="{% static 'image/xopp-logo.png' %}" type="image/x-icon">
     <script src="https://kit.fontawesome.com/8907ab85d0.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 </head>
 <style>
+
     body {
-        background-color: #f2f2f2;
+        background-color: #fff;
     }
-
-
+    h1{
+        color: #1988a0;
+    }
+    #content{
+        background-color: #fff;
+    }
   #content  .breadcrumb a {
     text-decoration: none;
   }
-
-
-
   #content  table {
     width: 100%;
     border-collapse: collapse;
@@ -34,10 +37,12 @@
     padding: 10px;
     background-color: white;
     border-radius: 8px;
+
   }
 
   #content  .table-sec h3 {
     margin: 10px 0 40px 0;
+    color: #1988a0;
   }
 
   #content  .table-sec td {
@@ -46,7 +51,7 @@
   }
 
   #content  .table-sec th {
-    background-color: black;
+    background-color: #1988a0;
     color:white;
     text-align: center;
     padding: 1rem;
@@ -62,37 +67,31 @@
   }
 
 
-  #content .first-sec .col-sec {
-    margin: 10px;
-  }
-
-  #content  .row .card {
+  #content  .row .card-1 {
     padding: 20px;
-    background-color: white;
-    border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    background-image: linear-gradient(to bottom, #3dbad6, #32aac6, #279ab6, #1a8ba6, #0b7c96);
+        border-radius: 5px;
   }
 
-  #content  .row .card .text {
-    font-family: "Ubuntu", sans-serif;
-    font-size: 14px;
-    color: #5A5A5A;
+  #content  .row .card-1 .text {
+    font-size: 20px;
   }
 
-  #content  .row .card h5 {
+  #content  .row .card-1 h5 {
     margin-left: 40px;
   }
 
-  #content  .row .card div {
+  #content  .row .card-1 div {
     padding: 10px;
   }
 
-  #content  .row .card i {
+  #content  .row .card-1 i {
     margin-right: 15px;
   }
 
-  #content  .row .card div:first-child {
-    border-bottom: 1px solid #b7b4b4b6;
+  #content  .row .card-1 div:first-child {
+    border-bottom: 1px solid #fff;
   }
 
   @media (max-width: 992px) {
@@ -111,7 +110,7 @@
         margin:10px 25px;
     }
     .pagination .page-item.active .page-link{
-        background-color: #033613;
+        background-color: #1988a0;
         opacity: 85%;
         border-color:white;
         color:white
@@ -119,23 +118,30 @@
     .pagination .page-link{
         color:black;
     }
-
+    .page-select select{
+        background-color: #3dbad6;
+        border: hidden;
+        padding: 10px;
+        color: #fff;
+    }
 </style>
+<body>
+<div>    
 <div class="container-fluid">
 <h1>Dashboard</h1>
 <ul class="breadcrumb">
     <li class="breadcrumb-item">
-        <a href="#"><i class="fa-solid fa-house"></i></a>
+        <a href="#" style="color: #1988a0;"><i class="fa-solid fa-house"></i></a>
     </li>
     <li class="breadcrumb-item active">
-        <a style="color: #495057;" href="#">Dashboard</a>
+        <a style="color: #1988a0;" href="#">Dashboard</a>
     </li>
 </ul>
 
 
-<div class="row first-sec">
-    <div class="col-sec col-lg-3 col-md-12">
-        <div class="card">
+<div class="row g-2 first-sec">
+    <div class="col-sec col-lg-4 col-md-12">
+        <div class="card-1">
             <div>
                 <i class="fa-solid fa-user"></i>
                 <span class="text">Total Patients</span><br>
@@ -148,8 +154,8 @@
             </div>
         </div>
     </div>
-    <div class="col-sec col-lg-3 col-md-12">
-        <div class="card">
+    <div class="col-sec col-lg-4 col-md-12">
+        <div class="card-1">
             <div>
                 <i class="fa-solid fa-eye"></i>
                 <span class="text">Today Visitors</span><br>
@@ -162,8 +168,8 @@
             </div>
         </div>
     </div>
-    <div class="col-sec col-lg-3 col-md-12">
-        <div class="card">
+    <div class="col-sec col-lg-4 col-md-12">
+        <div class="card-1">
             <div>
                 <i class="fa-solid fa-thumbs-up"></i>
                 <span class="text">Happy Clients</span><br>
@@ -178,7 +184,7 @@
     </div>
 </div>
 <!-- <div class="search-sec"> -->
-  <div class="page-select">
+  <div class="page-select mt-2">
       <select id="perPageSelect" onchange="changePerPage()">
           <option value="5" {% if page_obj.paginator.per_page == 5 %} selected {% endif %}>5</option>
           <option value="10" {% if page_obj.paginator.per_page == 10 %} selected {% endif %}>10</option>
@@ -265,4 +271,5 @@
 </div>
 </div>
 {% endblock %}
+</body>
 </html>

@@ -3,9 +3,9 @@
     {% load static %}
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="{% static 'image/logo.png' %}" type="image/gif"/>
+    <link rel="icon" href="{% static 'image/xopp-logo.png' %}" type="image/gif"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NatureBells</title>
+    <title>Xopp</title>
     <meta name="description" content="Description of your webpage">
     <meta name="keywords" content="HTML, CSS, JavaScript, Bootstrap">
     <meta name="author" content="Your Name">
@@ -14,11 +14,15 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
+    *{
+        font-family: "Cabin", sans-serif;
+    }
     .topbar {
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #000000;
+        background-color: #3DBAD6;
         width: 100%;
         height: 90px;
         color: white;
@@ -29,8 +33,7 @@
         padding-right: 0;
     }
     .topbar h2 {
-        font-family: 'Courier New', Courier, monospace;
-        color: aliceblue;
+        color: #fff;
         font-size: larger;
         margin: 0;
         position: absolute;
@@ -41,8 +44,8 @@
     }
     .search-bar button {
         padding: 8px 16px;
-        background-color: #5c5c5c;
-        color: white;
+        background-color: #fff;
+        color: #3DBAD6;
         border: none;
         border-radius: 5px;
         cursor: pointer;
@@ -59,17 +62,15 @@
     .fullscreen-bg {
         position: relative;
         width: 100%;
-        height: 100vh;
-        background-image: url("{% static 'image/img1.png' %}");
+        height: 120vh;
+        background-image: url("{% static 'image/hospital.jpg' %}");
         background-size: cover;
         background-position: center;
         display: flex;
         justify-content: center;
         align-items: center;
         text-align: center;
-        color: white;
         font-size: 36px;
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         overflow: hidden;
     }
     .fullscreen-bg::before {
@@ -79,27 +80,34 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.4);
+        /* background: rgba(0, 0, 0, 0.2); */
         z-index: 0;
     }
     .fullscreen-bg h1 {
-        font-weight: 900;
-        position: relative;
-        color: transparent;
-        -webkit-text-stroke: 1px white;
+        font-weight: 700;
+        font-size: 70px;
+        color: #fff;
     }
     .fullscreen-bg p {
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         font-weight: 10;
         position: relative;
         font-size: xx-large;
+    }
+    .fullscreen-bg button{
+        background-image: linear-gradient(to right top, #3dbad6, #38b6d2, #33b1ce, #e3e5e5, #b1babc);
+        border: hidden;
+        color: #fff;
+        border-radius: 30px;
+        height: 60px;
+        font-size: 20px;
+        width: 200px;
     }
 </style>
 <body>
     <div class="container-fluid">
         <div class="topbar">
-            <h2>home <span>Website</span></h2>
-            <img src="{% static 'image/logo.png' %}" alt="logo">
+            <h2>Home <span>Website</span></h2>
+            <img src="{% static 'image/xopp-logo.png' %}" alt="">
             <div class="search-bar">
                 <a href="/signin">
                 <button type="submit">signin</button>
@@ -110,8 +118,8 @@
     <div class="container-fluid">
         <section class="fullscreen-bg">
             <div>
-                <h1>NATURE BELLS</h1>
-                <p>Strengthening Through Ayurveda</p>
+                <h1>Get Better Care For <br> Your Health</h1>
+                <button>Learn More</button>
             </div>
         </section>
     </div>

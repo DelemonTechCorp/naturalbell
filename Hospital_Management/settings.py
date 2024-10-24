@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-$6fazi9ksbd5!&zi3mrh22q46p()jb@zs!u5(e4##ipl(eeb#%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.nature-bells-uae.info']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -77,18 +77,18 @@ WSGI_APPLICATION = 'Hospital_Management.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'NatureBells$nature',
-        'USER':'NatureBells',
-        'PASSWORD':'mysql@123',
-        'HOST':'NatureBells.mysql.pythonanywhere-services.com',
-        'PORT':'3306'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'dbnew.sqlite3',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'NatureBells$nature',
+    #     'USER':'NatureBells',
+    #     'PASSWORD':'mysql@123',
+    #     'HOST':'NatureBells.mysql.pythonanywhere-services.com',
+    #     'PORT':'3306'
+    # }
 }
 
 

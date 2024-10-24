@@ -19,7 +19,7 @@
     }
     table th{
         padding: .8rem;text-align: center;
-        background-color: black;
+        background-color: #1988a0;
         color: white;
     }
     table td{
@@ -41,9 +41,10 @@
 
     }
     .breadcrumb-sec{
-    margin:40px;
     }
-
+    h1{
+        color: #1988a0;
+    }
 
 
     .search-sec .button-sec{
@@ -69,8 +70,9 @@
     }
     .sec-1 .search-sec button{
         border-radius: 4px;
-        background-color: rgb(75, 75, 75);
-        padding:5px;
+        background-color:#1988a0;
+        padding:8px;
+        border: hidden;
         margin-left:10px;
         color:white;
     }
@@ -222,7 +224,7 @@
         margin:10px 25px;
     }
     .pagination .page-item.active .page-link{
-        background-color: #033613;
+        background-color: #1988a0;
         opacity: 85%;
         border-color:white;
         color:white
@@ -317,13 +319,13 @@
             </div>
         <form class="form"id="searchForm" method="post" action="{% url 'numbersessionsearch' %}">
             {% csrf_token %}
-        <input type="search"  name="searchitem" placeholder="search"><button  style="background-color:#033613;opacity: 85%;">Search</button>
+        <input type="search"  name="searchitem" placeholder="search"><button  >Search</button>
 
         </form>
-        <button style="background-color:#033613;opacity: 85%;" onclick="window.location.href='/numbersession';">View all</button>
-        <button style="background-color:#033613;opacity: 85%;" onclick="window.location.href='/schedules';">Assign to Therapist</button>
-        <button style="background-color:#033613;opacity: 85%;" onclick="exportTableToExcel('scheduleTable', 'schedule_data')">Export</button>
-        <button style="background-color:#033613;opacity: 85%;" onclick="window.location.href='/book';">Back to Report page</button>
+        <button onclick="window.location.href='/numbersession';">View all</button>
+        <button onclick="window.location.href='/schedules';">Assign to Therapist</button>
+        <button onclick="exportTableToExcel('scheduleTable', 'schedule_data')">Export</button>
+        <button onclick="window.location.href='/book';">Back to Report page</button>
      </div>
  </div>
 
