@@ -296,11 +296,11 @@
                 }
                 </script>
             </div>
-        <form class="form"id="searchForm" method="post" action="{% url 'searchschedule' %}">
-            {% csrf_token %}
-        <input type="search"  name="searchitem" placeholder="search"><button  style="background-color:#033613;opacity: 85%;">Search</button>
-        <button style="background-color:#033613;opacity: 85%;" onclick="window.location.href='/listschedules';">View all</button>
-        </form>
+        <!--<form class="form"id="searchForm" method="post" action="{% url 'searchschedule' %}">-->
+        <!--    {% csrf_token %}-->
+        <!--<input type="search"  name="searchitem" placeholder="search"><button  style="background-color:#033613;opacity: 85%;">Search</button>-->
+        <!--<button style="background-color:#033613;opacity: 85%;" onclick="window.location.href='/listschedules';">View all</button>-->
+        <!--</form>-->
         <button style="background-color:#033613;opacity: 85%;" id="downloadButton">Download</button>
         {% comment %} <button style="background-color:#033613;opacity: 85%;" onclick="exportTableToExcel('scheduleTable', 'schedule_data')">Export</button> {% endcomment %}
         <button style="background-color:#033613;opacity: 85%;" onclick="window.location.href='/book';">Back to Report page</button>
@@ -347,12 +347,12 @@
                 </td>
                 <td>
                     {% if item.Therapy %}
-                        {% if item.status.Status == "Pending" %}
+                        {% if item.status.Status == "Not Confirmed" %}
                             Therapy Session Scheduled
                         {% elif item.status.Status == "Attended" %}
                             Therapy Session Completed
                         {% else %}
-                            Therapy Session
+                            Therapy Session {{item.status.Status}}
                         {% endif %}
                     {% else %}
                         Doctor Booking
@@ -360,10 +360,12 @@
                 </td>
                 <td>
                     {% if item.Therapy %}
-                    {% if item.status.Status == "Pending" %}
+                    {% if item.status.Status == "Not Confirmed" %}
                         Scheduled a therapy session of {{ item.Therapy.Therapy }} with {{ item.Therapist.name }}
                     {% elif item.status.Status == "Attended" %}
                         Completed a therapy session of {{ item.Therapy.Therapy }} with {{ item.Therapist.name }}
+                    {% else %}
+                            {{item.status.Status}} a therapy session of {{ item.Therapy.Therapy }} with {{ item.Therapist.name }}
                     {% endif %}
                 {% elif item.Doctor %}
                    Booked an Appointment with Doctor {{ item.Doctor.name }}

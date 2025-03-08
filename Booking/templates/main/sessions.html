@@ -277,7 +277,7 @@
                 <th>Date</th>
                 <th>Time slot</th>
                 <th>Status</th>
-                <th>Action</th>
+                <!--<th>Action</th>-->
             </tr>
         </thead>
         <tbody>
@@ -291,7 +291,7 @@
                     <td>{{ session.schedule.Therapy }}</td>
                     <td>
                         {% if session.session_date %}
-                            <input type="date" name="session_date" value="{{ session.session_date|date:'Y-m-d' }}"
+                            <input type="date" name="session_date" value="{{ session.schedule.Date|date:'Y-m-d' }}"
                                    onchange="submitForm({{ session.id }})">
                         {% else %}
                             Not scheduled any date
@@ -299,20 +299,20 @@
                     </td>
 
                     <td>
-                        <input type="time" name="starting_Time" value="{{ session.starting_Time|time:'H:i' }}"
+                        <input type="time" name="starting_Time" value="{{ session.schedule.starting_Time|time:'H:i' }}"
                                onchange="submitForm({{ session.id }})">
                         to
-                        <input type="time" name="ending_Time" value="{{ session.ending_Time|time:'H:i' }}"
+                        <input type="time" name="ending_Time" value="{{ session.schedule.ending_Time|time:'H:i' }}"
                                onchange="submitForm({{ session.id }})">
                     </td>
-                    <td>{{ session.status }}</td>
-                    <td>
-                        {% if session.session_date and session.status == 'Not Confirmed' %}
-                        <button type="submit" name="mark_attended">Mark as Attended</button>
-                    {% else %}
+                    <td>{{ session.schedule.status }}</td>
+                    <!--<td>-->
+                    <!--    {% if session.schedule.Date and session.schedule.status == 'Not Confirmed' %}-->
+                    <!--    <button type="submit" name="mark_attended">Mark as Attended</button>-->
+                    <!--{% else %}-->
                         <!-- No action button if the session is completed -->
-                    {% endif %}
-                    </td>
+                    <!--{% endif %}-->
+                    <!--</td>-->
                 </form>
             </tr>
             {% endfor %}

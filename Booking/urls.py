@@ -89,6 +89,9 @@ urlpatterns = [
   path('upload_excel',views.upload_excel,name='upload_excel'),
   path('export-patients/', views.export_patients_to_excel, name='export_patients_to_excel'),
   path('edittherapy/<int:id>/', views.edittherapy, name='edittherapy'),
+  path('create-consultations', views.create_consultations, name='create_consultations'),
+
+
 
 
 

@@ -627,7 +627,7 @@
     const totalSlots = 29; // 12 hours * 2 slots per hour = 24 slots
 
     for (let i = 0; i < totalSlots; i++) {
-        const timeSlot = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const timeSlot = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
         const row = document.createElement('tr');
 
         const timeCell = document.createElement('td');
@@ -691,7 +691,8 @@
     function formatTime(time) {
         return time.toLocaleTimeString([], {
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
+            hour12: true
         });
     }
 

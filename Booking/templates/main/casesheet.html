@@ -63,12 +63,12 @@
  <div class="patient-info" id="downloadable-content">
     <h2>PATIENT INFORMATION</h2>
     <div class="info-grid">
-        <div class="info-item"><span>Name:</span><br> {{case.name}}</div>
-        <div class="info-item"><span>Date:</span> <br>{{ case.update_at|date:"d-m-Y " }}</div>
-        <div class="info-item"><span>Age:</span> <br>{{case.age}}</div>
-        <div class="info-item"><span>Blood group:</span><br>{{case.blood_gp}}</div>
-        <div class="info-item"><span>Gender:</span><br> {{case.gender}}</div>
-        <div class="info-item"><span>Phone Number:</span> <br>{{case.phone}}</div>
+        <div class="info-item"><span>Name:</span><br> {{case.patient.name}}</div>
+        <div class="info-item"><span>Date:</span> <br>{{ case.patient.update_at|date:"d-m-Y " }}</div>
+        <div class="info-item"><span>Age:</span> <br>{{case.patient.age}}</div>
+        <div class="info-item"><span>Blood group:</span><br>{{case.patient.blood_gp}}</div>
+        <div class="info-item"><span>Gender:</span><br> {{case.patient.gender}}</div>
+        <div class="info-item"><span>Phone Number:</span> <br>{{case.patient.phone}}</div>
         <div class="info-item"><span>Therapy:</span><br>{{case.therapy}}</div>
         <div class="info-item"><span>Medicine:</span><br>{{case.medicines}}</div>
      </div>
