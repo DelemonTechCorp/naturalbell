@@ -273,7 +273,7 @@
               <th>Nationality</th>
               <th>Status</th>
               <th width="30">consult</th>
-              <th>View</th>
+              <!--<th>View</th>-->
             <tr>
 
         <tbody>
@@ -287,7 +287,7 @@
               <td>{{i.patientid.age}}</td>
               <td>{{i.patientid.phone}}</td>
               <td>{{i.patientid.email}}</td>
-               <td>{{i.patientid.status}}</td>
+               <td>{{i.status}}</td>
               <td>
                 <div class="dropdown">
                     <button class="dropdown-btn"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -297,7 +297,7 @@
                     </div>
                 </div>
             </td>
-            <td><a href="/casesheet/{{i.id }}" style="color:#033613;opacity: 85%; text-decoration: none;">View all details</a></td>
+            <!--<td><a href="/casesheet/{{i.id }}" style="color:#033613;opacity: 85%; text-decoration: none;">View all details</a></td>-->
             </tr>
             {% endfor %}
 

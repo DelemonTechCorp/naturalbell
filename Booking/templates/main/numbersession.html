@@ -285,7 +285,7 @@
 
 </style>
 <div class="breadcrumb-sec">
-    <h1>Schedule</h1>
+    <h1>Therapy Schedules</h1>
     <ul class="breadcrumb">
     <li class="breadcrumb-item">
     <a href="#"><i class='bx bxs-dashboard'></i></a>
@@ -324,6 +324,11 @@
         <button style="background-color:#033613;opacity: 85%;" onclick="window.location.href='/schedules';">Assign to Therapist</button>
         <button style="background-color:#033613;opacity: 85%;" onclick="exportTableToExcel('scheduleTable', 'schedule_data')">Export</button>
         <button style="background-color:#033613;opacity: 85%;" onclick="window.location.href='/book';">Back to Report page</button>
+<!--        <form action="{% url 'create_consultations' %}" method="POST">-->
+<!--    {% csrf_token %}-->
+<!--    <button type="submit" style="background-color:#033613;opacity: 85%;">Create Consultations</button>-->
+<!--</form>-->
+
      </div>
  </div>
 

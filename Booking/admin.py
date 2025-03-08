@@ -58,6 +58,10 @@ class DepartmentAdmin(ImportExportModelAdmin,admin.ModelAdmin):
 @admin.register(Treatment)
 class TreatmentAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     list_display = ['Treatment', 'Department']
+@admin.register(Consultation)
+class ConsultationAdmin(admin.ModelAdmin):
+    list_display = ['patient', 'Booking','doctor','therapy','status','consultation_date','Amanirama','Proposedtreatmentplan','medicines']
+
 @admin.register(SessionStatus)
 class SessionStatusAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     list_display = ['session_date','session_group', 'ending_Time','starting_Time','status','schedule','session_number']

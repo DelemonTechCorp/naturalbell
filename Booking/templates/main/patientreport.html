@@ -43,6 +43,24 @@
                 </ol>
               </nav>
             </div>
+            <button type="button" class="btn btn-secondary" onclick="clearForm()">New Consultation</button>
+             <script>
+    function clearForm() {
+        // Get the form element
+        var form = document.getElementById('addLeadForm');
+
+        // Loop through each form element and clear the value, except specific fields
+        for (var i = 0; i < form.elements.length; i++) {
+            var element = form.elements[i];
+            // Exclude fields like patient name, age, gender, blood group
+            if (element.name !== "patientname" && element.name !== "age" && element.name !== "gender" && element.name !== "bloodgp") {
+                if (element.type === "text" || element.type === "textarea" || element.tagName === "SELECT") {
+                    element.value = ""; // Clear the value
+                }
+            }
+        }
+    }
+</script>
 
               <div class="col-md-9 grid-margin stretch-card" style="border-radius:10px 10px 0 0 ">
                 <div class="card" style="border-radius:10px 10px 0 0 ">
@@ -51,6 +69,9 @@
                     <!-- <p class="card-description"> Basic form layout </p> -->
                     <form class="forms-sample"  id="addLeadForm" method="POST" action="/addpatientreportform" style="padding:20px;">
                         {% csrf_token %}
+                        {% if consultation %}
+    <input type="hidden" name="booking_id" value="{{ consultation.Booking.id }}">
+{% endif %}
                       <div class="form-group row" style="margin-bottom: 20px;">
                         <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Patient Name</label>
                         <div class="col-sm-9">
@@ -81,7 +102,7 @@
                         <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Therapy</label>
                         <div class="col-sm-9">
                             <select id="doctor" name="therapy"  class="form-control" >
-                                <option value="{{patient.therapy.id}}">{{patient.therapy}}</option>
+                                <option value="{{consultation.therapy.id}}">{{consultation.therapy}}</option>
                                 {% for i in Therapies %}
                                     <option value="{{ i.id }}">{{ i.Therapy }}</option>
                                 {% endfor %}
@@ -100,7 +121,7 @@
                       <div class="form-group row" style="margin-bottom: 20px;">
                         <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Medicine</label>
                         <div class="col-sm-9">
-                          <textarea rows="3" class="form-control" name="medicine" value="{{patient.medicines}}" placeholder="Medicine"></textarea>
+                          <textarea rows="3" class="form-control" name="medicine" value="{{consultation.medicines}}" placeholder="Medicine">{{patient.medicines}}</textarea>
                         </div>
                       </div>
 
@@ -123,60 +144,60 @@
                 <div class="form-group row" style="margin-top: 20px;">
                     <label class="col-sm-3 k col-form-label">Digestion </label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="exampleInputUsername2"  value="{{patient.Digestion}}" name="Digestion"placeholder="">
+                        <input type="text" class="form-control" id="exampleInputUsername2"  value="{{consultation.Digestion}}" name="Digestion"placeholder="">
                     </div>
                 </div>
                 <div class="form-group row" style="margin-top: 20px;">
                     <label class="col-sm-3 k col-form-label">Sleep
                     </label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Sleep}}" name="Sleep"placeholder="">
+                        <input type="text" class="form-control" id="exampleInputUsername2" value="{{consultation.Sleep}}" name="Sleep"placeholder="">
                     </div>
                 </div>
                 <div class="form-group row" style="margin-top: 20px;">
                     <label class="col-sm-3 k col-form-label">Allergies </label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="exampleInputUsername2"value="{{patient.Allergies}}" name="Allergies"placeholder="">
+                        <input type="text" class="form-control" id="exampleInputUsername2"value="{{consultation.Allergies}}" name="Allergies"placeholder="">
                     </div>
                 </div>
                 <div class="form-group row" style="margin-top: 20px;">
                     <label class="col-sm-3 k col-form-label">Menstrual history  </label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Menstrualhistory}}" name="Menstrualhistory"placeholder="">
+                        <input type="text" class="form-control" id="exampleInputUsername2" value="{{consultation.Menstrualhistory}}" name="Menstrualhistory" placeholder="">
                     </div>
                 </div>
 
                  <div class="form-group row" style="margin-top: 20px;">
                     <label class="col-sm-3 col-form-label">Presenting complaints</label>
                     <div class="col-sm-9">
-                       <textarea type="text"  class="form-control" id="exampleInputUsername2" value="{{patient.Presentingcomplaints}}" name="Presentcomplaints" placeholder=""></textarea>
+                       <textarea type="text"  class="form-control" id="exampleInputUsername2" value="{{consultation.Presentingcomplaints}}" name="Presentingcomplaints" placeholder="">{{consultation.Presentingcomplaints}}</textarea>
                     </div>
 
                    </div>
                    <div class="form-group row" style="margin-top: 20px;">
                     <label class="col-sm-3 col-form-label">History of presenting complaints</label>
                     <div class="col-sm-9">
-                       <textarea type="text"  class="form-control" id="exampleInputUsername2" value="{{patient.Historyofpresentingcomplaints}}" name="History" placeholder=""></textarea>
+                       <textarea type="text"  class="form-control" id="exampleInputUsername2" value="{{patient.Historyofpresentingcomplaints}}" name="History" placeholder="">{{consultation.Historyofpresentingcomplaints}}</textarea>
                     </div>
 
                    </div>
                    <div class="form-group row" style="margin-top: 20px;">
                     <label class="col-sm-3 col-form-label">Past Medical and surgical history</label>
                     <div class="col-sm-9">
-                       <textarea type="text"  class="form-control" id="exampleInputUsername2" value="{{patient.PastMedicalandsurgicalhistory}}" name="PastMedical" placeholder=""></textarea>
+                       <textarea type="text"  class="form-control" id="exampleInputUsername2" value="{{patient.PastMedicalandsurgicalhistory}}" name="PastMedical" placeholder="">{{consultation.PastMedicalandsurgicalhistory}}</textarea>
                     </div>
 
                    </div>
                    <div class="form-group row" style="margin-top: 20px;">
                     <label class="col-sm-3 k col-form-label">Regular medications </label>
                     <div class="col-sm-9">
-                        <textarea type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Regularmedications}}" name="Regularmedications"placeholder=""></textarea>
+                        <textarea type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Regularmedications}}" name="Regularmedications"placeholder="">{{consultation.Regularmedications}}</textarea>
                     </div>
                 </div>
                 <div class="form-group row" style="margin-top: 20px;">
                   <label class="col-sm-3 k col-form-label">Examination findings </label>
                   <div class="col-sm-9">
-                      <textarea type="text" class="form-control" id="exampleInputUsername2" name="Examinationfindings"placeholder=""></textarea>
+                      <textarea type="text" class="form-control" id="exampleInputUsername2" name="Examinationfindings"placeholder="">{{consultation.Examinationfindings}}</textarea>
                   </div>
               </div>
 
@@ -193,50 +214,50 @@
                         <div class="form-group row" style="margin-top: 20px;">
                             <label class="col-sm-3 k col-form-label">Ama /nirama  </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Amanirama}}"name="Amanirama"placeholder="">
+                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{consultation.Amanirama}}"name="Amanirama"placeholder="">
                             </div>
                         </div>
                         <div class="form-group row" style="margin-top: 20px;">
                             <label class="col-sm-3 k col-form-label">Dosha predominence</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Doshapredominence}}"name="Dosha"placeholder="">
+                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{consultation.Doshapredominence}}"name="Dosha"placeholder="">
                             </div>
                         </div>
                         <div class="form-group row" style="margin-top: 20px;">
                             <label class="col-sm-3 k col-form-label">Dhathu predominence </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="exampleInputUsername2"value="{{patient.Dhathupredominence}}" name="Dhathu"placeholder="">
+                                <input type="text" class="form-control" id="exampleInputUsername2"value="{{consultation.Dhathupredominence}}" name="Dhathu"placeholder="">
                             </div>
                         </div>
                         <div class="form-group row" style="margin-top: 20px;">
                             <label class="col-sm-3 k col-form-label">Srothus involved</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Srothusinvolved}}"name="Srothus"placeholder="">
+                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{consultation.Srothusinvolved}}"name="Srothus"placeholder="">
                             </div>
                         </div>
                         <div class="form-group row" style="margin-top: 20px;">
                           <label class="col-sm-3 k col-form-label">Diagnosis</label>
                           <div class="col-sm-9">
-                              <input type="text" class="form-control" id="exampleInputUsername2" name="Diagnosis"placeholder="">
+                              <input type="text" class="form-control" id="exampleInputUsername2" value="{{consultation.Diagnosis}}" name="Diagnosis"placeholder="">
                           </div>
                       </div>
                         <div class="form-group row" style="margin-top: 20px;">
                             <label class="col-sm-3 k col-form-label">Treatment</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="exampleInputUsername2"value="{{patient.Treatment}}" name="Treatment"placeholder="">
+                                <input type="text" class="form-control" id="exampleInputUsername2"value="{{consultation.Treatment}}" name="Treatment"placeholder="">
                             </div>
                         </div>
                         <div class="form-group row" style="margin-top: 20px;">
                             <label class="col-sm-3 k col-form-label">Proposed treatment plan
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Proposedtreatmentplan}}"name=">Proposedtreatmentplan"placeholder="">
+                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{consultation.Proposedtreatmentplan}}" name="Proposedtreatmentplan" placeholder="">
                             </div>
                         </div>
                         <div class="form-group row" style="margin-top: 20px;">
                             <label class="col-sm-3 k col-form-label">Follow up </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{patient.Followup}}"name="Followup"placeholder="">
+                                <input type="text" class="form-control" id="exampleInputUsername2" value="{{consultation.Followup}}"name="Followup"placeholder="">
                             </div>
                         </div>
 

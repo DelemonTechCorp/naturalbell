@@ -15,32 +15,76 @@
   body {
     font-family: Arial, sans-serif;
   }
+/*   @media (max-width: 992px) {*/
+/*  #toggleButton{*/
+/*    display: none;*/
+/*  }*/
+/*  #content{*/
+/*      margin-left: 0;*/
+/*    }*/
+/*}*/
+/*   }*/
+  /*.sidebar {*/
+  /*  position: fixed;*/
+  /*  background-color: #f4f7f6;*/
+  /*  left: 0;*/
+  /*  width: 280px;*/
+  /*  height: calc(100% - 87px);*/
+  /*  margin-top:87px;*/
+  /*  z-index: 2000;*/
+  /*  font-family: var(--lato);*/
+  /*  transition: .3s ease;*/
+  /*  overflow-x: hidden;*/
+  /*  scrollbar-width: none;*/
+  /*  border-right:1px solid #dfdfdf;*/
+  /*  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);*/
+  /*  border-left:8px solid #69b9ad;*/
+  /*  overflow-y: auto;*/
+  /*}*/
+  /*#content {*/
+  /*  position: relative;*/
+  /*  width: calc(100% - 280px);*/
+  /*  left: 280px;*/
+  /*  transition: .3s ease;*/
+  /*  background-color: #f4f7f6;*/
+  /*  padding: 130px 30px;*/
+  /*  border-radius: 10px 0 0 0;*/
+  /*}*/
   .sidebar {
     position: fixed;
     background-color: #f4f7f6;
     left: 0;
-    width: 280px;
+    width: 280px; /* Width of expanded sidebar */
     height: calc(100% - 87px);
-    margin-top:87px;
+    margin-top: 87px;
     z-index: 2000;
-    font-family: var(--lato);
-    transition: .3s ease;
     overflow-x: hidden;
     scrollbar-width: none;
-    border-right:1px solid #dfdfdf;
+    overflow-y: auto;
+    transition: width 0.3s ease; /* Smooth transition for width */
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     border-left:8px solid #69b9ad;
-    overflow-y: auto;
+    border-right:1px solid #dfdfdf;
   }
-  #content {
-    position: relative;
-    width: calc(100% - 280px);
-    left: 280px;
-    transition: .3s ease;
+
+
+
+.sidebar.collapsed {
+    width: 0; /* Collapse sidebar width */
+    overflow: hidden; /* Prevent overflow */
+}#content {
+    margin-left: 280px; /* Margin for expanded state */
     background-color: #f4f7f6;
     padding: 130px 30px;
     border-radius: 10px 0 0 0;
+    transition: margin-left 0.3s ease; /* Smooth transition for margin */
+    position: relative;
+    background-color: #f4f7f6;
   }
+
+  #content.expanded {
+    margin-left: 0; /* No margin when sidebar is collapsed */
+}
 
   .sidebar ul {
     list-style: none;
@@ -375,6 +419,9 @@ table th:last-child {
 
   } */
 
+  /* Initial sidebar and content styling */
+
+
 </style>
 </head>
 <body>
@@ -403,7 +450,7 @@ table th:last-child {
 
 
 
-        <div class="sidebar" id="sidebar">
+        <div id="sidebar" class="sidebar">
 
           <ul>
             <li><a href="/dashboard"><i class="fa-solid fa-house"></i>Dashboard</a></li>
@@ -444,12 +491,33 @@ table th:last-child {
         </div>
 
 
-
-        <div id="content" >
-
+<div id="content" >
+          <button style="margin-bottom:40px;" id="toggleButton" onclick="toggleSidebars()"><i class="fas fa-expand"></i></button>
             {% block content %}{% endblock %}
 
           </div>
+
+          <script>
+        function toggleSidebars() {
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+    const toggleButtonIcon = document.querySelector('#toggleButton i');
+
+    // Toggle sidebar visibility and content margin
+    sidebar.classList.toggle('collapsed');
+    content.classList.toggle('expanded');
+
+    // Change the icon based on the current state
+    if (toggleButtonIcon.classList.contains('fa-expand')) {
+        toggleButtonIcon.classList.remove('fa-expand');
+        toggleButtonIcon.classList.add('fa-compress');
+    } else {
+        toggleButtonIcon.classList.remove('fa-compress');
+        toggleButtonIcon.classList.add('fa-expand');
+    }
+}
+
+        </script>
 
           <script>
             function toggleSidebar() {

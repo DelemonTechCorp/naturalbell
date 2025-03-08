@@ -20,6 +20,8 @@ from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.utils import timezone
 import random
+import time
+from itertools import chain
 from datetime import date, timedelta
 from django.utils.dateparse import parse_date
 from django.shortcuts import get_object_or_404
@@ -176,13 +178,19 @@ def upload_excel(request):
                                     reg_date=registration_date,
                                     reg_time=registration_time).exists():
                                 # Create a Booking instance associated with this patient
-                                booking.objects.create(
+                                booking_instance=booking.objects.create(
                                     patientid=patient,
                                     Doctor=doctor,
                                     reg_date=registration_date,
                                     reg_time=registration_time,
                                     admin=admin,
                                     status=status_obj
+                                )
+                                Consultation.objects.create(
+                                    patient=patient,
+                                    Booking=booking_instance,  # Use the created booking instance
+                                    doctor=doctor,
+                                    status=status_obj  # Use the status from booking
                                 )
 
                         except Exception as e:
@@ -536,7 +544,13 @@ def addAppointment(request):
 
     ob1.status = patient_status
     ob1.save()
-
+    ob3=Consultation(
+        patient=ob1,
+        Booking=ob2,
+        doctor=ob2.Doctor,
+        status=booking_status
+    )
+    ob3.save()
     return HttpResponse("<script>alert('Inserted successfully');window.location='/report'</script>")
 
 
@@ -637,6 +651,13 @@ def addAdmin(request):
         Name = request.POST.get('username')
         EmailId = request.POST.get('email')
         Password = request.POST.get('password')
+        if Admin.objects.filter(email=EmailId).exists():
+            return HttpResponse("<script>alert('This email is already taken.');window.history.back();</script>")
+
+        # Check if the email already exists in the Login model as well
+        if Login.objects.filter(username=EmailId).exists():
+            return HttpResponse("<script>alert('This email is already registered as a user.');window.history.back();</script>")
+
         ob = Login()
         ob.username = EmailId
         ob.password = Password
@@ -908,7 +929,7 @@ def addScheduling(request):
 
     # Retrieve session_count and handle if it's null or empty
     session_count_str = request.POST.get('session', None)
-    session_count = int(session_count_str) if session_count_str and session_count_str.isdigit() else None
+    session_count = int(session_count_str) if session_count_str and session_count_str.isdigit() else 1
 
     # Convert apdate to date object
     try:
@@ -930,54 +951,61 @@ def addScheduling(request):
         ending_Time__gt=stime
     )
     if conflicting_schedules.exists():
+        # conflicting_schedule_times = ", ".join(
+        #     [f"{schedule.starting_Time.strftime('%H:%M')} to {schedule.ending_Time.strftime('%H:%M')}" for schedule in conflicting_schedules]
+        # )
         conflicting_schedule_times = ", ".join(
-            [f"{schedule.starting_Time.strftime('%H:%M')} to {schedule.ending_Time.strftime('%H:%M')}" for schedule in conflicting_schedules]
+               [f"{schedule.starting_Time.strftime('%I:%M %p')} to {schedule.ending_Time.strftime('%I:%M %p')}" for schedule in conflicting_schedules]
         )
         messages.error(request, f'This therapist is already scheduled at {conflicting_schedule_times}. Please select a different time or therapist.')
         return redirect('/schedules')
-    try:
-        latest_session = SessionStatus.objects.latest('id')
-        session_group = latest_session.session_group + 1
-    except SessionStatus.DoesNotExist:
-        session_group = 1
+    else:
+        try:
+            latest_session = SessionStatus.objects.latest('id')
+            session_group = latest_session.session_group + 1
+        except SessionStatus.DoesNotExist:
+            session_group = 1
 
-    # Create the schedule for the first session
-    # for session_num in range(1, session_count + 1):
-    #     # Calculate the date for each session
-    #     session_date = apdate + timedelta(days=(session_num - 1) * 7)
-    for session_num in range(1, session_count + 1):
-        session_date = apdate + timedelta(days=session_num)
-        # Create the schedule for each session
-        ob1 = Schedule(
-            admin=admin,
-            patientid=obpatient,
-            Therapist=obtherapist,
-            Therapy=obtherapy,
-            Note=note,
-            Date=session_date,
-            number_of_session=session_count,
-            starting_Time=stime,
-            ending_Time=etime,
-            status=status
-        )
-        ob1.save()
+        # Create the schedule for the first session
+        # for session_num in range(1, session_count + 1):
+        #     # Calculate the date for each session
+        #     session_date = apdate + timedelta(days=(session_num - 1) * 7)
+        if session_count is None or session_count <= 0:
+            session_count = 1
+        if session_count > 0:
+          for session_num in range(1,session_count + 1):
+            session_date = apdate + timedelta(days=session_num - 1)
+            # Create the schedule for each session
+            ob1 = Schedule(
+                admin=admin,
+                patientid=obpatient,
+                Therapist=obtherapist,
+                Therapy=obtherapy,
+                Note=note,
+                Date=session_date,
+                number_of_session=session_count,
+                starting_Time=stime,
+                ending_Time=etime,
+                status=status
+            )
+            ob1.save()
 
-        # Create session status record
-        SessionStatus.objects.create(
-            schedule=ob1,
-            session_number=session_num,
-            session_date=session_date,
-            status=status.Status,  # Assuming status.Status is a string
-            starting_Time=stime,
-            ending_Time=etime,
-            session_group=session_group
-        )
+            # Create session status record
+            SessionStatus.objects.create(
+                schedule=ob1,
+                session_number=session_num,
+                session_date=session_date,
+                status=status.Status,  # Assuming status.Status is a string
+                starting_Time=stime,
+                ending_Time=etime,
+                session_group=session_group
+            )
 
-    # Update patient status
-    obpatient.status = status
-    obpatient.save()
+        # Update patient status
+        obpatient.status = status
+        obpatient.save()
 
-    return HttpResponse("<script>alert('Inserted successfully');window.location='/book'</script>")
+        return HttpResponse("<script>alert('Inserted successfully');window.location='/book'</script>")
 
 # def addScheduling(request):
 #     login_id = request.session.get('alid')
@@ -1164,7 +1192,9 @@ def editschedule(request):
     therapist=request.POST.get('therapist', None)
     apdate=request.POST.get('apdate', None)
     therapy=request.POST.get('therapy', None)
-    session=request.POST.get('session', None)
+    # session=request.POST.get('session', None)
+    session_str = request.POST.get('session', None)  # Get the session field as a string
+    session = int(session_str) if session_str and session_str.isdigit() else 1  # Default to 1 if empty
     note=request.POST.get('note', None)
     stime=request.POST.get('stime')
     etime=request.POST.get('etime')
@@ -1191,7 +1221,7 @@ def editschedule(request):
         session.starting_Time = stime
         session.ending_Time = etime
         session.save()
-    return HttpResponse("<script>alert('Updated successfully');window.location='/listschedules'</script>")
+    return HttpResponse("<script>alert('Updated successfully');window.location='/book'</script>")
 def deleteSchedule(request,id):
     ob = Schedule.objects.get(id=id)
     ob.delete()
@@ -1359,6 +1389,7 @@ def calendar(request):
     return render(request, 'main/calendar.html', context)
 def book(request):
     login_id = request.session.get('alid')
+    today = datetime.today().date()
     tasks = Schedule.objects.filter(admin__Lid_id=login_id)
     therapist=Therapist.objects.filter(admin__Lid_id=login_id)
     patient=Patient.objects.filter(admin__Lid_id=login_id)
@@ -1398,10 +1429,11 @@ def book(request):
             'id': task.patientid.patient_id,
             'therapy': task.Therapy.Therapy,
             'note': task.Note,
-            'patientId':task.id
+            'patientId':task.id,
+            'therapist_name': task.Therapist.name
         }
         events.append(event)
-        print('yaya',events)
+
     current_date = datetime.now()
     formatted_date = current_date.strftime('%B %d, %Y')
     weekday = current_date.strftime('%A')
@@ -1438,13 +1470,14 @@ def update_schedule(request):
                 'title': f"{task.patientid.name} with {task.Therapist.name}",
                 'start': str(task.Date) + 'T' + str(task.starting_Time),
                 'end': str(task.Date) + 'T' + str(task.ending_Time),
-                'color':task.status.color if patient_status else  random_color(),
+                'color':task.status.color ,
                 'column': therapist_dict[task.Therapist.id],
                 'patient': task.patientid.name,
                 'id': task.patientid.patient_id,
                 'therapy': task.Therapy.Therapy,
                 'note': task.Note,
-                'patientId':task.id
+                'patientId':task.id,
+                'therapist_name': task.Therapist.name
             }
             events.append(event)
             print('cvbn',events)
@@ -1525,7 +1558,7 @@ def doctorpatient(request):
     # Filter bookings for the logged-in doctor with specific statuses
     patient_list = booking.objects.filter(
         Doctor=doctor,
-        patientid__status__Status__in=['Confirmed', 'Registered']
+        status__Status__in=['Confirmed', 'Registered']
     ).order_by('-id')
 
     # Apply filtering based on search query
@@ -1595,17 +1628,21 @@ def editpatientreportform(request,id):
 
     doctors = Doctor.objects.all()
     Therapies=Therapy.objects.all()
+    consultation = Consultation.objects.filter(Booking=patient).first()
     context={
         'patient':patient.patientid,
         'doctors':doctors,
         'Therapies':Therapies,
         'date':str(patient.patientid.DOB),
+        'consultation':consultation
     }
     return render(request,'main/patientreport.html',context)
 def addpatientreportform(request):
         blood_gp = request.POST.get('bloodgp')
+        booking_id = request.POST.get('booking_id')
+        print(booking_id)
         therapy = request.POST.get('therapy')
-        number_of_session = request.POST.get('number_of_session')
+        number_of_session = request.POST.get('session')
         medicines = request.POST.get('medicine')
         Digestion = request.POST.get('Digestion')
         Sleep = request.POST.get('Sleep')
@@ -1625,6 +1662,7 @@ def addpatientreportform(request):
         Proposedtreatmentplan = request.POST.get('Proposedtreatmentplan')
         Followup = request.POST.get('Followup')
         ob1 = Patient.objects.get(id=request.session['pnid'])
+        booking_instance = booking.objects.get(patientid=ob1, id=request.POST.get('booking_id'))
         # Therapy_instance = Therapy.objects.get(pk=therapy)
         ob1.blood_gp=blood_gp
         if therapy:
@@ -1659,14 +1697,73 @@ def addpatientreportform(request):
         booking_status, created = Statusbooking.objects.get_or_create(Status='Attended')
         ob1.status = patient_status
         ob1.save()
-        booking_instance = booking.objects.get(patientid=ob1)
+        consultation, created = Consultation.objects.get_or_create(
+                  patient=ob1,
+                  Booking=booking_instance,
+                  doctor=booking_instance.Doctor,
+                  defaults={
+                      'Sleep': Sleep,
+                      'therapy': Therapy_instance if therapy else None,
+                      'Digestion': Digestion,
+                      'Allergies': Allergies,
+                      'Presentingcomplaints': Presentingcomplaints,
+                      'Historyofpresentingcomplaints': Historyofpresentingcomplaints,
+                      'PastMedicalandsurgicalhistory': PastMedicalandsurgicalhistory,
+                      'Regularmedications': Regularmedications,
+                      'Examinationfindings': Examinationfindings,
+                      'Amanirama': Amanirama,
+                      'Diagnosis': Diagnosis,
+                      'Doshapredominence': Doshapredominence,
+                      'Dhathupredominence': Dhathupredominence,
+                      'Srothusinvolved': Srothusinvolved,
+                      'Treatment': Treatment,
+                      'Proposedtreatmentplan': Proposedtreatmentplan,
+                      'Followup': Followup,
+                      'Menstrualhistory':Menstrualhistory,
+                      'number_of_session':number_of_session,
+                      'medicines':medicines
+                  }
+        )
+
+    # Update the consultation if it already exists
+        if not created:
+            consultation.Sleep = Sleep
+            consultation.therapy = Therapy_instance if therapy else None
+            consultation.Digestion = Digestion
+            consultation.Allergies = Allergies
+            consultation.Presentingcomplaints = Presentingcomplaints
+            consultation.Historyofpresentingcomplaints = Historyofpresentingcomplaints
+            consultation.PastMedicalandsurgicalhistory = PastMedicalandsurgicalhistory
+            consultation.Regularmedications = Regularmedications
+            consultation.Examinationfindings = Examinationfindings
+            consultation.Amanirama = Amanirama
+            consultation.Diagnosis = Diagnosis
+            consultation.Doshapredominence = Doshapredominence
+            consultation.Dhathupredominence = Dhathupredominence
+            consultation.Srothusinvolved = Srothusinvolved
+            consultation.Treatment = Treatment
+            consultation.Proposedtreatmentplan = Proposedtreatmentplan
+            consultation.Followup = Followup
+            consultation.Menstrualhistory=Menstrualhistory
+            consultation.number_of_session=number_of_session
+            consultation.medicines=medicines
+
+            consultation.save()
+        consultation.status = booking_status
+        consultation.save()
+        # Update status
+        patient_status, created = Status.objects.get_or_create(Status='Attended')
+        booking_status, created = Statusbooking.objects.get_or_create(Status='Attended')
+        ob1.status = patient_status
         booking_instance.status = booking_status
+        ob1.save()
         booking_instance.save()
+
         return HttpResponse("<script>alert('Updated successfully');window.location='/consultedpatient'</script>")
 def casesheets(request,id):
-    case=booking.objects.get(id=id)
+    case=Consultation.objects.get(Booking=id)
     context={
-        'case':case.patientid
+        'case':case
     }
     return render(request,'main/casesheet.html',context)
 def case(request,id):
@@ -1703,6 +1800,7 @@ def consultedpatient(request):
     return render(request,'main/consultedpatient.html',context)
 def report(request):
     login_id = request.session.get('alid')
+    today = datetime.today().date()
     tasks = booking.objects.filter(admin__Lid_id=login_id)
     doctors = Doctor.objects.filter(admin__Lid_id=login_id)
     patients = Patient.objects.filter(admin__Lid_id=login_id)
@@ -2030,14 +2128,14 @@ def doctordashboard(request):
     # Filter bookings for the logged-in doctor with specific patient statuses
     bookings = booking.objects.filter(
         Doctor=doctor,
-        patientid__status__Status__in=['Confirmed', 'Registered', '	Not Confirmed','Attended']
+        status__Status__in=['Confirmed', 'Registered', 'Not Confirmed','Attended']
     ).order_by('-id')
     total_patients = bookings.count()
     today = timezone.now().date()
     today_created_count = bookings.filter(created_at__date=today).count()
     consultedpatient = booking.objects.filter(
         Doctor=doctor,
-        patientid__status__Status='Attended'
+        status__Status='Attended'
     )
 
     # Count the number of consulted patients
@@ -2057,17 +2155,23 @@ def history(request,id):
     patient = get_object_or_404(Patient, id=id)
 
     # Fetch all schedules and bookings for the patient
-    schedules = Schedule.objects.filter(patientid=patient).order_by('-Date', '-starting_Time')
-    bookings = booking.objects.filter(patientid=patient).order_by('-reg_date', '-reg_time')
+    schedules = Schedule.objects.filter(patientid=patient).order_by('-Date' )
+    bookings = booking.objects.filter(patientid=patient).order_by('-reg_date')
 
     # Combine and sort schedules and bookings by date and time
+
+    # history = sorted(
+    #     list(schedules) + list(bookings),
+    #     key=lambda x: (getattr(x, 'Date', getattr(x, 'reg_date', None))),
+
+
+    #     reverse=True
+    # )
     history = sorted(
-        list(schedules) + list(bookings),
-        key=lambda x: (getattr(x, 'Date', getattr(x, 'reg_date', None)),
-                       getattr(x, 'starting_Time', getattr(x, 'reg_time', None))),
+        chain(schedules, bookings),
+        key=lambda x: getattr(x, 'Date', getattr(x, 'reg_date', None)),
         reverse=True
     )
-
     context = {
         'case': patient,
         'history': history,
@@ -2178,4 +2282,33 @@ def update_session(request, session_id):
         session.save()
 
         return redirect('view_sessions', schedule_id=schedule.id)
+def create_consultations(request):
+    if request.method == "POST":
+        bookings = booking.objects.all()
 
+        for b in bookings:
+            try:
+                # Get the necessary details from each booking
+                patient = b.patientid  # Get the Patient object
+                doctor = b.Doctor      # Get the Doctor object
+                status = b.status      # Get the Statusbooking object
+
+                # Create a new Consultation object with only the required fields
+                consultation = Consultation(
+                    patient=patient,
+                    Booking=b,
+                    doctor=doctor,
+                    status=status,  # Pass the actual Statusbooking object
+                )
+
+                # Save the consultation object
+                consultation.save()
+                print(f'Successfully created Consultation for Booking ID: {booking.id}')
+            except Exception as e:
+                print(f'Error creating Consultation for Booking ID: {booking.id} - {str(e)}')
+
+        # Redirect back to the report page after creating consultations
+        return redirect('/report')
+    else:
+        # If method is not POST, you can redirect to another page or handle it differently
+        return redirect('/report')

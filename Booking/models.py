@@ -175,3 +175,35 @@ class SessionStatus(models.Model):
     def __str__(self):
         return f"Session {self.session_number}: {self.status}"
 
+class Consultation(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='consultations',null=True)
+    Booking = models.ForeignKey(booking, on_delete=models.CASCADE,null=True)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE,null=True)
+    consultation_date = models.DateTimeField(auto_now_add=True)
+    medicines=models.TextField(null=True)
+    number_of_session=models.CharField(max_length=50,null=True)
+    Followup =models.CharField(max_length=100,null=True)
+    Proposedtreatmentplan=models.CharField(max_length=100,null=True)
+    Treatment=models.CharField(max_length=100,null=True)
+    Srothusinvolved=models.CharField(max_length=100,null=True)
+    Dhathupredominence =models.CharField(max_length=100,null=True)
+    Doshapredominence=models.CharField(max_length=100,null=True)
+    Amanirama=models.CharField(max_length=100,null=True)
+    Regularmedications=models.CharField(max_length=500,null=True)
+    PastMedicalandsurgicalhistory=models.CharField(max_length=500,null=True)
+    Historyofpresentingcomplaints  =models.CharField(max_length=500,null=True)
+    Presentingcomplaints=models.CharField(max_length=500,null=True)
+    Menstrualhistory=models.CharField(max_length=500,null=True)
+    Allergies=models.CharField(max_length=100,null=True)
+    Sleep=models.CharField(max_length=100,null=True)
+    Digestion=models.CharField(max_length=100,null=True)
+    Clinicaldetails=models.CharField(max_length=500,null=True)
+    update_at= models.DateTimeField(auto_now_add=True, null=True)
+    status=models.ForeignKey(Statusbooking,on_delete=models.CASCADE,null=True)
+    Examinationfindings=models.CharField(max_length=500,null=True)
+    Diagnosis=models.CharField(max_length=100,null=True)
+    therapy=models.ForeignKey(Therapy,on_delete=models.CASCADE,null=True)
+    def __str__(self):
+        return f"Consultation on {self.consultation_date} for {self.patient.name}"
+
+
